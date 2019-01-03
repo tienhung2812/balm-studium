@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>859</width>
+    <height>559</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <widget class="QTabWidget" name="tabWidget">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>10</y>
+      <width>861</width>
+      <height>501</height>
+     </rect>
+    </property>
+    <property name="currentIndex">
+     <number>0</number>
+    </property>
+    <widget class="QWidget" name="data_tab">
+     <attribute name="title">
+      <string>Data</string>
+     </attribute>
+     <widget class="QLabel" name="return_label">
+      <property name="geometry">
+       <rect>
+        <x>680</x>
+        <y>20</y>
+        <width>59</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>15</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Return</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="liquidity_label">
+      <property name="geometry">
+       <rect>
+        <x>120</x>
+        <y>20</y>
+        <width>59</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>15</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Liquidity</string>
+      </property>
+     </widget>
+     <widget class="QTableWidget" name="liquidity_list">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>40</y>
+        <width>256</width>
+        <height>391</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="cost_label">
+      <property name="geometry">
+       <rect>
+        <x>400</x>
+        <y>20</y>
+        <width>59</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>15</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Cost</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="next_button">
+      <property name="geometry">
+       <rect>
+        <x>370</x>
+        <y>440</y>
+        <width>114</width>
+        <height>32</height>
+       </rect>
+      </property>
+      <property name="layoutDirection">
+       <enum>Qt::LeftToRight</enum>
+      </property>
+      <property name="autoFillBackground">
+       <bool>false</bool>
+      </property>
+      <property name="text">
+       <string>Next</string>
+      </property>
+     </widget>
+     <widget class="QTableWidget" name="cost_list">
+      <property name="geometry">
+       <rect>
+        <x>300</x>
+        <y>40</y>
+        <width>256</width>
+        <height>391</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QTableWidget" name="return_list">
+      <property name="geometry">
+       <rect>
+        <x>580</x>
+        <y>40</y>
+        <width>256</width>
+        <height>391</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="contraint_tab">
+     <attribute name="title">
+      <string>Constraints</string>
+     </attribute>
+     <widget class="QPushButton" name="calculate_button">
+      <property name="geometry">
+       <rect>
+        <x>370</x>
+        <y>440</y>
+        <width>114</width>
+        <height>32</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Calculate</string>
+      </property>
+     </widget>
+     <widget class="QTableWidget" name="contraint_table">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>831</width>
+        <height>411</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="result_tab">
+     <attribute name="title">
+      <string>Result</string>
+     </attribute>
+     <widget class="QTableWidget" name="result_list">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>831</width>
+        <height>411</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="objectiveFuntion_label">
+      <property name="geometry">
+       <rect>
+        <x>310</x>
+        <y>440</y>
+        <width>131</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Objective Function: </string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="objectiveFuntion_label_2">
+      <property name="geometry">
+       <rect>
+        <x>440</x>
+        <y>440</y>
+        <width>101</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Number</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>859</width>
+     <height>22</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources/>
+ <connections/>
+</ui>
