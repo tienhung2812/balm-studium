@@ -21,7 +21,7 @@ class Ui_MainWindow(object):
         self.data_tab = QtWidgets.QWidget()
         self.data_tab.setObjectName("data_tab")
         self.return_label = QtWidgets.QLabel(self.data_tab)
-        self.return_label.setGeometry(QtCore.QRect(700, 20, 59, 16))
+        self.return_label.setGeometry(QtCore.QRect(720, 20, 59, 16))
         font = QtGui.QFont()
         font.setPointSize(15)
         self.return_label.setFont(font)
@@ -33,18 +33,11 @@ class Ui_MainWindow(object):
         font.setPointSize(15)
         self.liquidity_label.setFont(font)
         self.liquidity_label.setObjectName("liquidity_label")
-
-        ##Liquidity List
-        self.liquidity_list = QtWidgets.QTableWidget(8,3,self.data_tab)
-        self.liquidity_list.setColumnCount(4)
-        self.liquidity_list.setRowCount(0)
+        self.liquidity_list = QtWidgets.QTableWidget(self.data_tab)
         self.liquidity_list.setGeometry(QtCore.QRect(20, 40, 256, 321))
         self.liquidity_list.setObjectName("liquidity_list")
-        self.liquidity_list.setHorizontalHeaderLabels(['Budget','LDD','LSD','LTD'])
-        header = self.liquidity_list.horizontalHeader()
-        for col in range(0,self.liquidity_list.columnCount()):
-            header.setSectionResizeMode(int(col), QtWidgets.QHeaderView.Stretch)
-        
+        self.liquidity_list.setColumnCount(0)
+        self.liquidity_list.setRowCount(0)
         self.cost_label = QtWidgets.QLabel(self.data_tab)
         self.cost_label.setGeometry(QtCore.QRect(400, 20, 59, 16))
         font = QtGui.QFont()
@@ -57,28 +50,16 @@ class Ui_MainWindow(object):
         self.next_button.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.next_button.setAutoFillBackground(False)
         self.next_button.setObjectName("next_button")
-
-        # Cost List
-        self.cost_list = QtWidgets.QTableWidget(8,5,self.data_tab)
+        self.cost_list = QtWidgets.QTableWidget(self.data_tab)
         self.cost_list.setGeometry(QtCore.QRect(300, 40, 256, 321))
         self.cost_list.setObjectName("cost_list")
-        self.cost_list.setColumnCount(5)
+        self.cost_list.setColumnCount(0)
         self.cost_list.setRowCount(0)
-        self.cost_list.setHorizontalHeaderLabels(['Budget','CLDD','CLSD','CLTD','CLB'])
-        header = self.cost_list.horizontalHeader()
-        for col in range(0,self.cost_list.columnCount()):
-            header.setSectionResizeMode(int(col), QtWidgets.QHeaderView.Stretch)
-        # Return List
-        self.return_list = QtWidgets.QTableWidget(8,6,self.data_tab)
+        self.return_list = QtWidgets.QTableWidget(self.data_tab)
         self.return_list.setGeometry(QtCore.QRect(580, 40, 311, 321))
         self.return_list.setObjectName("return_list")
-        self.return_list.setColumnCount(6)
+        self.return_list.setColumnCount(0)
         self.return_list.setRowCount(0)
-        self.return_list.setHorizontalHeaderLabels(['Budget','RABCB','RABOB','RAGS','RADB','RAA'])
-        header = self.return_list.horizontalHeader()
-        for col in range(0,self.return_list.columnCount()):
-            header.setSectionResizeMode(int(col), QtWidgets.QHeaderView.Stretch)
-
         self.frame = QtWidgets.QFrame(self.data_tab)
         self.frame.setGeometry(QtCore.QRect(20, 370, 256, 121))
         self.frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
@@ -297,7 +278,7 @@ class Ui_MainWindow(object):
         self.menuBar.addAction(self.menuFiles.menuAction())
 
         self.retranslateUi(MainWindow)
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(2)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -347,11 +328,3 @@ class Ui_MainWindow(object):
         self.menuFiles.setTitle(_translate("MainWindow", "File"))
         self.actionAdd_Excel_file.setText(_translate("MainWindow", "Add Excel file"))
 
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    MainWindow = QtWidgets.QMainWindow()
-    ui = Ui_MainWindow()
-    ui.setupUi(MainWindow)
-    MainWindow.show()
-    sys.exit(app.exec_())
