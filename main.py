@@ -16,11 +16,14 @@ class Ui_MainWindow(object):
         ##DATA
         
         self.Liquidity = pd.DataFrame(columns=['budget', 'ldd','lsd','ltd','lb'])
+        self.Liquidity['budget'] = self.Liquidity['budget'].astype(int)
         self.Liquidity.set_index('budget')
         self.Cost = pd.DataFrame(columns=['budget', 'cldd','clsd','cltd','clb'])
+        self.Cost.budget.astype(int)
         self.Cost.set_index('budget')
         self.Return = pd.DataFrame(columns=['budget', 'rabcb','rabob','rags','radb','raa'])
-        self.Cost.set_index('budget')
+        self.Return.budget.astype(int)
+        self.Return.set_index('budget')
 
         self.MainWindow = MainWindow
         MainWindow.setObjectName("MainWindow")
@@ -70,6 +73,7 @@ class Ui_MainWindow(object):
         self.next_button.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.next_button.setAutoFillBackground(False)
         self.next_button.setObjectName("next_button")
+        self.next_button.clicked.connect(self.nextTab)
 
         # Cost List
         self.cost_list = QtWidgets.QTableWidget(8,5,self.data_tab)
@@ -105,10 +109,10 @@ class Ui_MainWindow(object):
         self.liquidityRemove.setGeometry(QtCore.QRect(170, 90, 81, 32))
         self.liquidityRemove.setObjectName("liquidityRemove")
         self.liquidityRemove.clicked.connect(self.removeRow)
-        # self.liquidityModify = QtWidgets.QPushButton(self.frame)
-        # self.liquidityModify.setGeometry(QtCore.QRect(100, 90, 81, 32))
-        # self.liquidityModify.setObjectName("liquidityModify")
-        # self.liquidityModify.clicked.connect(self.modifyRow)
+        self.liquidityModify = QtWidgets.QPushButton(self.frame)
+        self.liquidityModify.setGeometry(QtCore.QRect(100, 90, 81, 32))
+        self.liquidityModify.setObjectName("liquidityModify")
+        self.liquidityModify.clicked.connect(self.modifyRow)
         self.Lbudget = QtWidgets.QTextEdit(self.frame)
         self.Lbudget.setGeometry(QtCore.QRect(5, 60, 21, 31))
         self.Lbudget.setObjectName("Budget")
@@ -161,10 +165,10 @@ class Ui_MainWindow(object):
         self.costRemove.setGeometry(QtCore.QRect(170, 90, 81, 32))
         self.costRemove.setObjectName("costRemove")
         self.costRemove.clicked.connect(self.removeRow)
-        # self.costModify = QtWidgets.QPushButton(self.frame_2)
-        # self.costModify.setGeometry(QtCore.QRect(100, 90, 81, 32))
-        # self.costModify.setObjectName("costModify")
-        # self.costModify.clicked.connect(self.modifyRow)
+        self.costModify = QtWidgets.QPushButton(self.frame_2)
+        self.costModify.setGeometry(QtCore.QRect(100, 90, 81, 32))
+        self.costModify.setObjectName("costModify")
+        self.costModify.clicked.connect(self.modifyRow)
         self.CLDD = QtWidgets.QTextEdit(self.frame_2)
         self.CLDD.setGeometry(QtCore.QRect(35, 60, 51, 31))
         self.CLDD.setObjectName("CLDD")
@@ -221,11 +225,11 @@ class Ui_MainWindow(object):
         self.returnRemove = QtWidgets.QPushButton(self.frame_3)
         self.returnRemove.setGeometry(QtCore.QRect(220, 90, 81, 32))
         self.returnRemove.setObjectName("returnRemove")
-        self.returnAdd.clicked.connect(self.removeRow)
-        # self.returnModify = QtWidgets.QPushButton(self.frame_3)
-        # self.returnModify.setGeometry(QtCore.QRect(150, 90, 81, 32))
-        # self.returnModify.setObjectName("returnModify")
-        # self.returnAdd.clicked.connect(self.modifyRow)
+        self.returnRemove.clicked.connect(self.removeRow)
+        self.returnModify = QtWidgets.QPushButton(self.frame_3)
+        self.returnModify.setGeometry(QtCore.QRect(150, 90, 81, 32))
+        self.returnModify.setObjectName("returnModify")
+        self.returnModify.clicked.connect(self.modifyRow)
         self.Rbudget = QtWidgets.QTextEdit(self.frame_3)
         self.Rbudget.setGeometry(QtCore.QRect(10, 60, 21, 31))
         self.Rbudget.setObjectName("Budget")
@@ -290,6 +294,7 @@ class Ui_MainWindow(object):
         self.calculate_button = QtWidgets.QPushButton(self.contraint_tab)
         self.calculate_button.setGeometry(QtCore.QRect(400, 500, 114, 32))
         self.calculate_button.setObjectName("calculate_button")
+        self.calculate_button.clicked.connect(self.calculate)
         self.contraint_table = QtWidgets.QTableWidget(self.contraint_tab)
         self.contraint_table.setGeometry(QtCore.QRect(10, 10, 891, 411))
         self.contraint_table.setObjectName("contraint_table")
@@ -340,7 +345,7 @@ class Ui_MainWindow(object):
         self.next_button.setText(_translate("MainWindow", "Next"))
         self.liquidityAdd.setText(_translate("MainWindow", "Add"))
         self.liquidityRemove.setText(_translate("MainWindow", "Remove"))
-        # self.liquidityModify.setText(_translate("MainWindow", "Modify"))
+        self.liquidityModify.setText(_translate("MainWindow", "Clear"))
         self.label.setText(_translate("MainWindow", "LDD \n"
 "Demand Deposit"))
         self.label_2.setText(_translate("MainWindow", "LSD \n"
@@ -349,7 +354,7 @@ class Ui_MainWindow(object):
 "Term Deposit"))
         self.costAdd.setText(_translate("MainWindow", "Add"))
         self.costRemove.setText(_translate("MainWindow", "Remove"))
-        # self.costModify.setText(_translate("MainWindow", "Modify"))
+        self.costModify.setText(_translate("MainWindow", "Clear"))
         self.label_10.setText(_translate("MainWindow", "CLDD \n"
 "Demand Deposit"))
         self.label_11.setText(_translate("MainWindow", "CLSD \n"
@@ -360,7 +365,7 @@ class Ui_MainWindow(object):
 "CLB"))
         self.returnAdd.setText(_translate("MainWindow", "Add"))
         self.returnRemove.setText(_translate("MainWindow", "Remove"))
-        # self.returnModify.setText(_translate("MainWindow", "Modify"))
+        self.returnModify.setText(_translate("MainWindow", "Clear"))
         self.label_21.setText(_translate("MainWindow", "central bank\n"
 "RABCB"))
         self.label_22.setText(_translate("MainWindow", "other banks\n"
@@ -405,31 +410,34 @@ class Ui_MainWindow(object):
             return
         self.refreshTable()
         
-        
+    def modifyRow(self):
+        # print("Modify Row")
+        #Specify table
+        senderBtn = self.MainWindow.sender()
+        if(senderBtn == self.liquidityAdd or senderBtn == self.liquidityModify or senderBtn == self.liquidityRemove):
+            self.Lbudget.clear()
+            self.LDD.clear()
+            self.LSD.clear()
+            self.LTD.clear()
 
-    # def modifyRow(self):
-    #     # print("Modify Row")
-    #     #Specify table
-    #     senderBtn = self.MainWindow.sender()
-    #     if(senderBtn == self.liquidityAdd or senderBtn == self.liquidityModify or senderBtn == self.liquidityRemove):
-    #         data = self.composeData(0)
-    #         if(data!=None):
-    #             self.Liquidity.loc[data[0]] = data
-    #         # print(self.Liquidity)
-    #     elif(senderBtn == self.costAdd or senderBtn == self.costModify or senderBtn == self.costRemove):
-    #         data = self.composeData(1)
-    #         if(data!=None):
-    #             self.Cost.loc[data[0]] = data
-    #         # print("Cost")
-    #     elif(senderBtn == self.returnAdd or senderBtn == self.returnModify or senderBtn == self.returnRemove):
-    #         data = self.composeData(2)
-    #         if(data!=None):
-    #             self.Return.loc[data[0]] = data
-    #         # print("Return")
-    #     else:
-    #         print("Error")
-    #         return
-    #     self.refreshTable()
+            # print(self.Liquidity)
+        elif(senderBtn == self.costAdd or senderBtn == self.costModify or senderBtn == self.costRemove):
+            self.Cbudget.clear()
+            self.CLDD.clear()
+            self.CLSD.clear()
+            self.CLTD.clear()
+            self.CLB.clear()
+        elif(senderBtn == self.returnAdd or senderBtn == self.returnModify or senderBtn == self.returnRemove):
+            self.Rbudget.clear()
+            self.RABCB.clear()
+            self.RABOB.clear()
+            self.RAGS.clear()
+            self.RADB.clear()
+            self.RAA.clear()
+        else:
+            print("Error")
+            return
+        self.refreshTable()
 
     def removeRow(self):
         # print("Remove Row")
@@ -475,26 +483,24 @@ class Ui_MainWindow(object):
         self.refreshTable()
 
     def refreshTable(self):
-        table = self.liquidity_list
-        data = self.Liquidity
-        #For Liquidity
-        table.setRowCount(0)
-        
-        rawData = []
-        for index in data.index.values:
-            rowPosition = table.rowCount()
-            table.insertRow(rowPosition)
-            col = 0
-            for data in data.loc[ index , : ]:
-                print(data)
-                data = str(data)
-                table.setItem(rowPosition,col,QTableWidgetItem(data))
-                col += 1
-                
-            
-        
-        
-
+        tableList = [self.liquidity_list,self.cost_list, self.return_list]
+        dataList = [self.Liquidity,self.Cost,self.Return]
+        for i in range(0,len(tableList)):
+            table = tableList[i]
+            data = dataList[i]
+            data = data.sort_values(by=['budget'], ascending=True)
+            #For Liquidity
+            table.setRowCount(0)
+            rawData = []
+            for index in data.index.values:
+                rowPosition = table.rowCount()
+                table.insertRow(rowPosition)
+                col = 0
+                for colData in data.loc[ index , : ]:
+                    # print(type(colData))
+                    colData = str(colData)
+                    table.setItem(rowPosition,col,QTableWidgetItem(colData))
+                    col += 1
     def composeData(self,table):
         # #Liquidity
         data = []
@@ -547,7 +553,7 @@ class Ui_MainWindow(object):
                 data[i] = int(data[i])
             else:
                 data[i] = float(data[i])
-            # print(data[i])
+        # print(data)
         return data
         
     
@@ -565,6 +571,11 @@ class Ui_MainWindow(object):
         # msg.buttonClicked.connect(msgbtn)
 
         retval = msg.exec_()
+
+    def nextTab(self):
+        self.tabWidget.setCurrentIndex(1)
+    def calculate(self):
+        self.tabWidget.setCurrentIndex(2)
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
