@@ -7,9 +7,22 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-
+from PyQt5.QtWidgets import QTableWidgetItem
+import pandas as pd 
+import numpy as np
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
+        
+        ##DATA
+        
+        self.Liquidity = pd.DataFrame(columns=['budget', 'ldd','lsd','ltd','lb'])
+        self.Liquidity.set_index('budget')
+        self.Cost = pd.DataFrame(columns=['budget', 'cldd','clsd','cltd','clb'])
+        self.Cost.set_index('budget')
+        self.Return = pd.DataFrame(columns=['budget', 'rabcb','rabob','rags','radb','raa'])
+        self.Cost.set_index('budget')
+
+        self.MainWindow = MainWindow
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(915, 619)
         self.centralWidget = QtWidgets.QWidget(MainWindow)
@@ -87,23 +100,29 @@ class Ui_MainWindow(object):
         self.liquidityAdd = QtWidgets.QPushButton(self.frame)
         self.liquidityAdd.setGeometry(QtCore.QRect(50, 90, 61, 32))
         self.liquidityAdd.setObjectName("liquidityAdd")
+        self.liquidityAdd.clicked.connect(self.addRow)
         self.liquidityRemove = QtWidgets.QPushButton(self.frame)
         self.liquidityRemove.setGeometry(QtCore.QRect(170, 90, 81, 32))
         self.liquidityRemove.setObjectName("liquidityRemove")
-        self.liquidityModify = QtWidgets.QPushButton(self.frame)
-        self.liquidityModify.setGeometry(QtCore.QRect(100, 90, 81, 32))
-        self.liquidityModify.setObjectName("liquidityModify")
+        self.liquidityRemove.clicked.connect(self.removeRow)
+        # self.liquidityModify = QtWidgets.QPushButton(self.frame)
+        # self.liquidityModify.setGeometry(QtCore.QRect(100, 90, 81, 32))
+        # self.liquidityModify.setObjectName("liquidityModify")
+        # self.liquidityModify.clicked.connect(self.modifyRow)
+        self.Lbudget = QtWidgets.QTextEdit(self.frame)
+        self.Lbudget.setGeometry(QtCore.QRect(5, 60, 21, 31))
+        self.Lbudget.setObjectName("Budget")
         self.LDD = QtWidgets.QTextEdit(self.frame)
-        self.LDD.setGeometry(QtCore.QRect(10, 60, 71, 31))
+        self.LDD.setGeometry(QtCore.QRect(30, 60, 71, 31))
         self.LDD.setObjectName("LDD")
         self.LSD = QtWidgets.QTextEdit(self.frame)
-        self.LSD.setGeometry(QtCore.QRect(90, 60, 71, 31))
+        self.LSD.setGeometry(QtCore.QRect(105, 60, 71, 31))
         self.LSD.setObjectName("LSD")
-        self.textEdit_3 = QtWidgets.QTextEdit(self.frame)
-        self.textEdit_3.setGeometry(QtCore.QRect(170, 60, 71, 31))
-        self.textEdit_3.setObjectName("textEdit_3")
+        self.LTD = QtWidgets.QTextEdit(self.frame)
+        self.LTD.setGeometry(QtCore.QRect(180, 60, 71, 31))
+        self.LTD.setObjectName("LTD")
         self.label = QtWidgets.QLabel(self.frame)
-        self.label.setGeometry(QtCore.QRect(10, 10, 71, 51))
+        self.label.setGeometry(QtCore.QRect(30, 10, 71, 51))
         font = QtGui.QFont()
         font.setPointSize(12)
         self.label.setFont(font)
@@ -111,7 +130,7 @@ class Ui_MainWindow(object):
         self.label.setWordWrap(True)
         self.label.setObjectName("label")
         self.label_2 = QtWidgets.QLabel(self.frame)
-        self.label_2.setGeometry(QtCore.QRect(90, 10, 71, 51))
+        self.label_2.setGeometry(QtCore.QRect(105, 10, 71, 51))
         font = QtGui.QFont()
         font.setPointSize(12)
         self.label_2.setFont(font)
@@ -119,7 +138,7 @@ class Ui_MainWindow(object):
         self.label_2.setWordWrap(True)
         self.label_2.setObjectName("label_2")
         self.label_3 = QtWidgets.QLabel(self.frame)
-        self.label_3.setGeometry(QtCore.QRect(170, 10, 71, 51))
+        self.label_3.setGeometry(QtCore.QRect(180, 10, 71, 51))
         font = QtGui.QFont()
         font.setPointSize(12)
         self.label_3.setFont(font)
@@ -131,20 +150,26 @@ class Ui_MainWindow(object):
         self.frame_2.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame_2.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_2.setObjectName("frame_2")
+        self.Cbudget = QtWidgets.QTextEdit(self.frame_2)
+        self.Cbudget.setGeometry(QtCore.QRect(10, 60, 21, 31))
+        self.Cbudget.setObjectName("Budget")
         self.costAdd = QtWidgets.QPushButton(self.frame_2)
         self.costAdd.setGeometry(QtCore.QRect(50, 90, 61, 32))
         self.costAdd.setObjectName("costAdd")
+        self.costAdd.clicked.connect(self.addRow)
         self.costRemove = QtWidgets.QPushButton(self.frame_2)
         self.costRemove.setGeometry(QtCore.QRect(170, 90, 81, 32))
         self.costRemove.setObjectName("costRemove")
-        self.costModify = QtWidgets.QPushButton(self.frame_2)
-        self.costModify.setGeometry(QtCore.QRect(100, 90, 81, 32))
-        self.costModify.setObjectName("costModify")
+        self.costRemove.clicked.connect(self.removeRow)
+        # self.costModify = QtWidgets.QPushButton(self.frame_2)
+        # self.costModify.setGeometry(QtCore.QRect(100, 90, 81, 32))
+        # self.costModify.setObjectName("costModify")
+        # self.costModify.clicked.connect(self.modifyRow)
         self.CLDD = QtWidgets.QTextEdit(self.frame_2)
-        self.CLDD.setGeometry(QtCore.QRect(10, 60, 51, 31))
+        self.CLDD.setGeometry(QtCore.QRect(35, 60, 51, 31))
         self.CLDD.setObjectName("CLDD")
         self.label_10 = QtWidgets.QLabel(self.frame_2)
-        self.label_10.setGeometry(QtCore.QRect(10, 10, 51, 51))
+        self.label_10.setGeometry(QtCore.QRect(35, 10, 51, 51))
         font = QtGui.QFont()
         font.setPointSize(12)
         self.label_10.setFont(font)
@@ -152,7 +177,7 @@ class Ui_MainWindow(object):
         self.label_10.setWordWrap(True)
         self.label_10.setObjectName("label_10")
         self.label_11 = QtWidgets.QLabel(self.frame_2)
-        self.label_11.setGeometry(QtCore.QRect(70, 10, 51, 51))
+        self.label_11.setGeometry(QtCore.QRect(90, 10, 51, 51))
         font = QtGui.QFont()
         font.setPointSize(12)
         self.label_11.setFont(font)
@@ -160,10 +185,10 @@ class Ui_MainWindow(object):
         self.label_11.setWordWrap(True)
         self.label_11.setObjectName("label_11")
         self.CLSD = QtWidgets.QTextEdit(self.frame_2)
-        self.CLSD.setGeometry(QtCore.QRect(70, 60, 51, 31))
+        self.CLSD.setGeometry(QtCore.QRect(90, 60, 51, 31))
         self.CLSD.setObjectName("CLSD")
         self.label_12 = QtWidgets.QLabel(self.frame_2)
-        self.label_12.setGeometry(QtCore.QRect(130, 10, 51, 51))
+        self.label_12.setGeometry(QtCore.QRect(145, 10, 51, 51))
         font = QtGui.QFont()
         font.setPointSize(12)
         self.label_12.setFont(font)
@@ -171,10 +196,10 @@ class Ui_MainWindow(object):
         self.label_12.setWordWrap(True)
         self.label_12.setObjectName("label_12")
         self.CLTD = QtWidgets.QTextEdit(self.frame_2)
-        self.CLTD.setGeometry(QtCore.QRect(130, 60, 51, 31))
+        self.CLTD.setGeometry(QtCore.QRect(145, 60, 51, 31))
         self.CLTD.setObjectName("CLTD")
         self.label_19 = QtWidgets.QLabel(self.frame_2)
-        self.label_19.setGeometry(QtCore.QRect(185, 10, 61, 51))
+        self.label_19.setGeometry(QtCore.QRect(193, 10, 61, 51))
         font = QtGui.QFont()
         font.setPointSize(12)
         self.label_19.setFont(font)
@@ -182,7 +207,7 @@ class Ui_MainWindow(object):
         self.label_19.setWordWrap(True)
         self.label_19.setObjectName("label_19")
         self.CLB = QtWidgets.QTextEdit(self.frame_2)
-        self.CLB.setGeometry(QtCore.QRect(190, 60, 51, 31))
+        self.CLB.setGeometry(QtCore.QRect(200, 60, 51, 31))
         self.CLB.setObjectName("CLB")
         self.frame_3 = QtWidgets.QFrame(self.data_tab)
         self.frame_3.setGeometry(QtCore.QRect(580, 370, 311, 121))
@@ -192,17 +217,23 @@ class Ui_MainWindow(object):
         self.returnAdd = QtWidgets.QPushButton(self.frame_3)
         self.returnAdd.setGeometry(QtCore.QRect(100, 90, 61, 32))
         self.returnAdd.setObjectName("returnAdd")
-        self.returnRemove_2 = QtWidgets.QPushButton(self.frame_3)
-        self.returnRemove_2.setGeometry(QtCore.QRect(220, 90, 81, 32))
-        self.returnRemove_2.setObjectName("returnRemove_2")
-        self.ModifyRemove = QtWidgets.QPushButton(self.frame_3)
-        self.ModifyRemove.setGeometry(QtCore.QRect(150, 90, 81, 32))
-        self.ModifyRemove.setObjectName("ModifyRemove")
+        self.returnAdd.clicked.connect(self.addRow)
+        self.returnRemove = QtWidgets.QPushButton(self.frame_3)
+        self.returnRemove.setGeometry(QtCore.QRect(220, 90, 81, 32))
+        self.returnRemove.setObjectName("returnRemove")
+        self.returnAdd.clicked.connect(self.removeRow)
+        # self.returnModify = QtWidgets.QPushButton(self.frame_3)
+        # self.returnModify.setGeometry(QtCore.QRect(150, 90, 81, 32))
+        # self.returnModify.setObjectName("returnModify")
+        # self.returnAdd.clicked.connect(self.modifyRow)
+        self.Rbudget = QtWidgets.QTextEdit(self.frame_3)
+        self.Rbudget.setGeometry(QtCore.QRect(10, 60, 21, 31))
+        self.Rbudget.setObjectName("Budget")
         self.RABCB = QtWidgets.QTextEdit(self.frame_3)
-        self.RABCB.setGeometry(QtCore.QRect(10, 60, 51, 31))
+        self.RABCB.setGeometry(QtCore.QRect(35, 60, 51, 31))
         self.RABCB.setObjectName("RABCB")
         self.label_21 = QtWidgets.QLabel(self.frame_3)
-        self.label_21.setGeometry(QtCore.QRect(10, 10, 51, 51))
+        self.label_21.setGeometry(QtCore.QRect(35, 10, 51, 51))
         font = QtGui.QFont()
         font.setPointSize(12)
         self.label_21.setFont(font)
@@ -210,7 +241,7 @@ class Ui_MainWindow(object):
         self.label_21.setWordWrap(True)
         self.label_21.setObjectName("label_21")
         self.label_22 = QtWidgets.QLabel(self.frame_3)
-        self.label_22.setGeometry(QtCore.QRect(70, 10, 51, 51))
+        self.label_22.setGeometry(QtCore.QRect(90, 10, 51, 51))
         font = QtGui.QFont()
         font.setPointSize(12)
         self.label_22.setFont(font)
@@ -218,10 +249,10 @@ class Ui_MainWindow(object):
         self.label_22.setWordWrap(True)
         self.label_22.setObjectName("label_22")
         self.RABOB = QtWidgets.QTextEdit(self.frame_3)
-        self.RABOB.setGeometry(QtCore.QRect(70, 60, 51, 31))
+        self.RABOB.setGeometry(QtCore.QRect(90, 60, 51, 31))
         self.RABOB.setObjectName("RABOB")
         self.label_23 = QtWidgets.QLabel(self.frame_3)
-        self.label_23.setGeometry(QtCore.QRect(130, 10, 51, 51))
+        self.label_23.setGeometry(QtCore.QRect(145, 10, 51, 51))
         font = QtGui.QFont()
         font.setPointSize(12)
         self.label_23.setFont(font)
@@ -229,10 +260,10 @@ class Ui_MainWindow(object):
         self.label_23.setWordWrap(True)
         self.label_23.setObjectName("label_23")
         self.RAGS = QtWidgets.QTextEdit(self.frame_3)
-        self.RAGS.setGeometry(QtCore.QRect(130, 60, 51, 31))
+        self.RAGS.setGeometry(QtCore.QRect(145, 60, 51, 31))
         self.RAGS.setObjectName("RAGS")
         self.label_24 = QtWidgets.QLabel(self.frame_3)
-        self.label_24.setGeometry(QtCore.QRect(185, 10, 61, 51))
+        self.label_24.setGeometry(QtCore.QRect(200, 10, 61, 51))
         font = QtGui.QFont()
         font.setPointSize(12)
         self.label_24.setFont(font)
@@ -240,10 +271,10 @@ class Ui_MainWindow(object):
         self.label_24.setWordWrap(True)
         self.label_24.setObjectName("label_24")
         self.RADB = QtWidgets.QTextEdit(self.frame_3)
-        self.RADB.setGeometry(QtCore.QRect(190, 60, 51, 31))
+        self.RADB.setGeometry(QtCore.QRect(200, 60, 51, 31))
         self.RADB.setObjectName("RADB")
         self.label_25 = QtWidgets.QLabel(self.frame_3)
-        self.label_25.setGeometry(QtCore.QRect(245, 10, 61, 51))
+        self.label_25.setGeometry(QtCore.QRect(250, 10, 61, 51))
         font = QtGui.QFont()
         font.setPointSize(12)
         self.label_25.setFont(font)
@@ -251,7 +282,7 @@ class Ui_MainWindow(object):
         self.label_25.setWordWrap(True)
         self.label_25.setObjectName("label_25")
         self.RAA = QtWidgets.QTextEdit(self.frame_3)
-        self.RAA.setGeometry(QtCore.QRect(250, 60, 51, 31))
+        self.RAA.setGeometry(QtCore.QRect(255, 60, 51, 31))
         self.RAA.setObjectName("RAA")
         self.tabWidget.addTab(self.data_tab, "")
         self.contraint_tab = QtWidgets.QWidget()
@@ -309,7 +340,7 @@ class Ui_MainWindow(object):
         self.next_button.setText(_translate("MainWindow", "Next"))
         self.liquidityAdd.setText(_translate("MainWindow", "Add"))
         self.liquidityRemove.setText(_translate("MainWindow", "Remove"))
-        self.liquidityModify.setText(_translate("MainWindow", "Modify"))
+        # self.liquidityModify.setText(_translate("MainWindow", "Modify"))
         self.label.setText(_translate("MainWindow", "LDD \n"
 "Demand Deposit"))
         self.label_2.setText(_translate("MainWindow", "LSD \n"
@@ -318,7 +349,7 @@ class Ui_MainWindow(object):
 "Term Deposit"))
         self.costAdd.setText(_translate("MainWindow", "Add"))
         self.costRemove.setText(_translate("MainWindow", "Remove"))
-        self.costModify.setText(_translate("MainWindow", "Modify"))
+        # self.costModify.setText(_translate("MainWindow", "Modify"))
         self.label_10.setText(_translate("MainWindow", "CLDD \n"
 "Demand Deposit"))
         self.label_11.setText(_translate("MainWindow", "CLSD \n"
@@ -328,8 +359,8 @@ class Ui_MainWindow(object):
         self.label_19.setText(_translate("MainWindow", "Borrowing\n"
 "CLB"))
         self.returnAdd.setText(_translate("MainWindow", "Add"))
-        self.returnRemove_2.setText(_translate("MainWindow", "Remove"))
-        self.ModifyRemove.setText(_translate("MainWindow", "Modify"))
+        self.returnRemove.setText(_translate("MainWindow", "Remove"))
+        # self.returnModify.setText(_translate("MainWindow", "Modify"))
         self.label_21.setText(_translate("MainWindow", "central bank\n"
 "RABCB"))
         self.label_22.setText(_translate("MainWindow", "other banks\n"
@@ -347,6 +378,193 @@ class Ui_MainWindow(object):
         self.menuFiles.setTitle(_translate("MainWindow", "File"))
         self.actionAdd_Excel_file.setText(_translate("MainWindow", "Add Excel file"))
 
+    def addRow(self):
+        # print("Add Row")
+        #Specify table
+        senderBtn = self.MainWindow.sender()
+        if(senderBtn == self.liquidityAdd or senderBtn == self.liquidityRemove):
+            data = self.composeData(0)
+            if(data!=None):
+                self.Liquidity.loc[data[0]] = data
+            # print("Liquidity")
+            # print(self.Liquidity)
+        elif(senderBtn == self.costAdd or senderBtn == self.costRemove):
+            data = self.composeData(1)
+            if(data!=None):
+                self.Cost.loc[data[0]] = data
+            # print("Cost")
+            # print(self.Cost)
+        elif(senderBtn == self.returnAdd or senderBtn == self.returnRemove):
+            data = self.composeData(2)
+            if(data!=None):
+                self.Return.loc[data[0]] = data
+            # print("Return")
+            # print(self.Return)
+        else:
+            print("Error")
+            return
+        self.refreshTable()
+        
+        
+
+    # def modifyRow(self):
+    #     # print("Modify Row")
+    #     #Specify table
+    #     senderBtn = self.MainWindow.sender()
+    #     if(senderBtn == self.liquidityAdd or senderBtn == self.liquidityModify or senderBtn == self.liquidityRemove):
+    #         data = self.composeData(0)
+    #         if(data!=None):
+    #             self.Liquidity.loc[data[0]] = data
+    #         # print(self.Liquidity)
+    #     elif(senderBtn == self.costAdd or senderBtn == self.costModify or senderBtn == self.costRemove):
+    #         data = self.composeData(1)
+    #         if(data!=None):
+    #             self.Cost.loc[data[0]] = data
+    #         # print("Cost")
+    #     elif(senderBtn == self.returnAdd or senderBtn == self.returnModify or senderBtn == self.returnRemove):
+    #         data = self.composeData(2)
+    #         if(data!=None):
+    #             self.Return.loc[data[0]] = data
+    #         # print("Return")
+    #     else:
+    #         print("Error")
+    #         return
+    #     self.refreshTable()
+
+    def removeRow(self):
+        # print("Remove Row")
+        #Specify table
+        senderBtn = self.MainWindow.sender()
+        if(senderBtn == self.liquidityAdd or senderBtn == self.liquidityRemove):
+            b_id = self.Lbudget.toPlainText()
+            # print("Liquid ")
+        elif(senderBtn == self.costAdd or senderBtn == self.costRemove):
+            b_id = self.Cbudget.toPlainText()
+            # print("Cost")
+        elif(senderBtn == self.returnAdd or senderBtn == self.returnRemove):
+            b_id = self.Rbudget.toPlainText()
+            # print("Return")
+        else:
+            print("Error")
+            return
+        try:
+            a = int(b_id)
+        except:
+            self.showdialog("Budget must be in int")
+            return
+        b_id = [int(b_id)]
+        print(b_id)
+        try:
+            if(senderBtn == self.liquidityAdd or senderBtn == self.liquidityRemove):
+                self.Liquidity.drop(b_id,inplace=True)
+                # print("Liquidity")
+                # print(self.Liquidity)
+            elif(senderBtn == self.costAdd or senderBtn == self.costRemove):
+                self.Cost.drop(b_id,inplace=True)
+                # print("Cost")
+                # print("Cost")
+                # print(self.Cost)
+            elif(senderBtn == self.returnAdd or senderBtn == self.returnRemove):
+                self.Return.drop(b_id,inplace=True)
+                # print("Return")
+                # print("Return")
+                # print(self.Return)
+        except:
+            self.showdialog("Budget not found")
+            return
+        self.refreshTable()
+
+    def refreshTable(self):
+        table = self.liquidity_list
+        data = self.Liquidity
+        #For Liquidity
+        table.setRowCount(0)
+        
+        rawData = []
+        for index in data.index.values:
+            rowPosition = table.rowCount()
+            table.insertRow(rowPosition)
+            col = 0
+            for data in data.loc[ index , : ]:
+                print(data)
+                data = str(data)
+                table.setItem(rowPosition,col,QTableWidgetItem(data))
+                col += 1
+                
+            
+        
+        
+
+    def composeData(self,table):
+        # #Liquidity
+        data = []
+        if(table==0):
+            #Append data
+            data.append(self.Lbudget.toPlainText())
+            data.append(self.LDD.toPlainText())
+            data.append(self.LSD.toPlainText())
+            data.append(self.LTD.toPlainText())
+            data.append("0")
+        #Cost
+        elif(table==1):
+            #Append data
+            data.append(self.Cbudget.toPlainText())
+            data.append(self.CLDD.toPlainText())
+            data.append(self.CLSD.toPlainText())
+            data.append(self.CLTD.toPlainText())
+            data.append(self.CLB.toPlainText())
+        # Return
+        elif(table==2):
+            #Append data
+            data.append(self.Rbudget.toPlainText())
+            data.append(self.RABCB.toPlainText())
+            data.append(self.RABOB.toPlainText())
+            data.append(self.RAGS.toPlainText())
+            data.append(self.RADB.toPlainText())
+            data.append(self.RAA.toPlainText())
+        else:
+            self.showdialog("No table found")
+            return
+        ##Check Null
+        for i in data:
+            if(str(i) == ""):
+                self.showdialog("Please fill all the field")
+                return
+            #Check is Number
+            try:
+                a = float(i)
+            except:
+                self.showdialog("Number only")
+                return
+        #check Budget is int
+        try:
+                a = int(data[0])
+        except:
+            self.showdialog("Budget must be in int")
+            return
+        for i in range(0,len(data)):
+            if(i==0):
+                data[i] = int(data[i])
+            else:
+                data[i] = float(data[i])
+            # print(data[i])
+        return data
+        
+    
+            
+        # print(table)
+    def showdialog(self,text):
+        msg = QtWidgets.QMessageBox()
+        msg.setIcon(QtWidgets.QMessageBox.Information)
+
+        msg.setText("Error")
+        msg.setInformativeText(text)
+        msg.setWindowTitle("Error")
+        # msg.setDetailedText(detail)
+        # msg.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
+        # msg.buttonClicked.connect(msgbtn)
+
+        retval = msg.exec_()
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
