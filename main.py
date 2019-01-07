@@ -638,11 +638,18 @@ class Ui_MainWindow(object):
         self.tabWidget.setCurrentIndex(2)
 
     def browseFile(self):
-        self.folderPath = QtWidgets.QFileDialog.getExistingDirectory(self, 'Select folder')
-        print(self.folderPath)
+        options = QFileDialog.Options()
+        options |= QFileDialog.DontUseNativeDialog
+        fileName, _ = QFileDialog.getOpenFileName(MainWindow,"QFileDialog.getOpenFileName()", "","All Files (*);;Python Files (*.xlsx)", options=options)
+        if fileName:
+            print(fileName)
+        # self.folderPath = QtWidgets.QFileDialog.getExistingDirectory(MainWindow, 'Select folder')
+        # print(self.folderPath)
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
+    if app is None:
+        app = QtWidgets.QApplication([])
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()
     ui.setupUi(MainWindow)
