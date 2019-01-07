@@ -7,7 +7,10 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QTableWidgetItem
+from PyQt5.QtWidgets import QTableWidgetItem,QFileDialog
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+# from PyQt5.QtGui import QFileDialog
 import pandas as pd 
 import numpy as np
 class Ui_MainWindow(object):
@@ -27,24 +30,35 @@ class Ui_MainWindow(object):
 
         self.MainWindow = MainWindow
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(915, 619)
+        self.MainWindow.showMaximized()
+        self.width = self.MainWindow.width()
+        self.height = self.MainWindow.height()
+        self.MainWindow.setFixedSize(self.width, self.height)
+        # MainWindow.resize(915, 619)
         self.centralWidget = QtWidgets.QWidget(MainWindow)
         self.centralWidget.setObjectName("centralWidget")
         self.tabWidget = QtWidgets.QTabWidget(self.centralWidget)
         self.tabWidget.setEnabled(True)
-        self.tabWidget.setGeometry(QtCore.QRect(0, 10, 911, 571))
+        self.tabWidget.setGeometry(QtCore.QRect(0, 10, self.width, self.height))
         self.tabWidget.setObjectName("tabWidget")
         self.data_tab = QtWidgets.QWidget()
         self.data_tab.setObjectName("data_tab")
+
+        #DATA LABEL
+        #Label Geometry 
+        # X =((self.width/3)*l)-((self.width/3)/2)
+        #List Geometry (padding 10)
+        # X =((self.width/3)*(l-1))+10
+        #Width =(self.width/3)-20
         self.return_label = QtWidgets.QLabel(self.data_tab)
-        self.return_label.setGeometry(QtCore.QRect(700, 20, 59, 16))
+        self.return_label.setGeometry(QtCore.QRect(((self.width/3)*3)-((self.width/3)/2)-59/2, 20, 59, 16))
         font = QtGui.QFont()
         font.setPointSize(15)
         self.return_label.setFont(font)
         self.return_label.setAlignment(QtCore.Qt.AlignCenter)
         self.return_label.setObjectName("return_label")
         self.liquidity_label = QtWidgets.QLabel(self.data_tab)
-        self.liquidity_label.setGeometry(QtCore.QRect(120, 20, 59, 16))
+        self.liquidity_label.setGeometry(QtCore.QRect(((self.width/3)*1)-((self.width/3)/2)-59/2, 20, 59, 16))
         font = QtGui.QFont()
         font.setPointSize(15)
         self.liquidity_label.setFont(font)
@@ -52,24 +66,24 @@ class Ui_MainWindow(object):
 
         ##Liquidity List
         self.liquidity_list = QtWidgets.QTableWidget(8,3,self.data_tab)
-        self.liquidity_list.setColumnCount(4)
+        self.liquidity_list.setColumnCount(5)
         self.liquidity_list.setRowCount(0)
-        self.liquidity_list.setGeometry(QtCore.QRect(20, 40, 256, 321))
+        self.liquidity_list.setGeometry(QtCore.QRect(((self.width/3)*(1-1))+10, 40, (self.width/3)-20, 321))
         self.liquidity_list.setObjectName("liquidity_list")
-        self.liquidity_list.setHorizontalHeaderLabels(['Budget','LDD','LSD','LTD'])
+        self.liquidity_list.setHorizontalHeaderLabels(['Budget','LDD','LSD','LTD','LB'])
         header = self.liquidity_list.horizontalHeader()
         for col in range(0,self.liquidity_list.columnCount()):
             header.setSectionResizeMode(int(col), QtWidgets.QHeaderView.Stretch)
         
         self.cost_label = QtWidgets.QLabel(self.data_tab)
-        self.cost_label.setGeometry(QtCore.QRect(400, 20, 59, 16))
+        self.cost_label.setGeometry(QtCore.QRect(((self.width/3)*2)-((self.width/3)/2)-59/2, 20, 59, 16))
         font = QtGui.QFont()
         font.setPointSize(15)
         self.cost_label.setFont(font)
         self.cost_label.setAlignment(QtCore.Qt.AlignCenter)
         self.cost_label.setObjectName("cost_label")
         self.next_button = QtWidgets.QPushButton(self.data_tab)
-        self.next_button.setGeometry(QtCore.QRect(400, 500, 114, 32))
+        self.next_button.setGeometry(QtCore.QRect(self.width/2-114/2, 500, 114, 32))
         self.next_button.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.next_button.setAutoFillBackground(False)
         self.next_button.setObjectName("next_button")
@@ -77,7 +91,7 @@ class Ui_MainWindow(object):
 
         # Cost List
         self.cost_list = QtWidgets.QTableWidget(8,5,self.data_tab)
-        self.cost_list.setGeometry(QtCore.QRect(300, 40, 256, 321))
+        self.cost_list.setGeometry(QtCore.QRect(((self.width/3)*(2-1))+10, 40, (self.width/3)-20, 321))
         self.cost_list.setObjectName("cost_list")
         self.cost_list.setColumnCount(5)
         self.cost_list.setRowCount(0)
@@ -87,7 +101,7 @@ class Ui_MainWindow(object):
             header.setSectionResizeMode(int(col), QtWidgets.QHeaderView.Stretch)
         # Return List
         self.return_list = QtWidgets.QTableWidget(8,6,self.data_tab)
-        self.return_list.setGeometry(QtCore.QRect(580, 40, 311, 321))
+        self.return_list.setGeometry(QtCore.QRect(((self.width/3)*(3-1))+10, 40, (self.width/3)-20, 321))
         self.return_list.setObjectName("return_list")
         self.return_list.setColumnCount(6)
         self.return_list.setRowCount(0)
@@ -96,8 +110,20 @@ class Ui_MainWindow(object):
         for col in range(0,self.return_list.columnCount()):
             header.setSectionResizeMode(int(col), QtWidgets.QHeaderView.Stretch)
 
+        #Frame Size
+        frameWidth = (self.width/3)-20
+        frameHeight = 121
+        
+        #Liquidity Frame
+        #Text edit geometry
+        #Padding 5
+        #Budget X: 5
+        #Other: (((frameWidth - (5+21))/4)*(1-1))+31
+        #Text edit size
+        #Bugdet:21
+        #Other: ((frameWidth - (5+21))/4)-10
         self.frame = QtWidgets.QFrame(self.data_tab)
-        self.frame.setGeometry(QtCore.QRect(20, 370, 256, 121))
+        self.frame.setGeometry(QtCore.QRect((self.width/3)*(1-1)+10, 370, (self.width/3)-20, 121))
         self.frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame.setObjectName("frame")
@@ -117,16 +143,19 @@ class Ui_MainWindow(object):
         self.Lbudget.setGeometry(QtCore.QRect(5, 60, 21, 31))
         self.Lbudget.setObjectName("Budget")
         self.LDD = QtWidgets.QTextEdit(self.frame)
-        self.LDD.setGeometry(QtCore.QRect(30, 60, 71, 31))
+        self.LDD.setGeometry(QtCore.QRect((((frameWidth - (5+21))/4)*(1-1))+31, 60, ((frameWidth - (5+21))/4)-10, 31))
         self.LDD.setObjectName("LDD")
         self.LSD = QtWidgets.QTextEdit(self.frame)
-        self.LSD.setGeometry(QtCore.QRect(105, 60, 71, 31))
+        self.LSD.setGeometry(QtCore.QRect((((frameWidth - (5+21))/4)*(2-1))+31, 60, ((frameWidth - (5+21))/4)-10, 31))
         self.LSD.setObjectName("LSD")
         self.LTD = QtWidgets.QTextEdit(self.frame)
-        self.LTD.setGeometry(QtCore.QRect(180, 60, 71, 31))
+        self.LTD.setGeometry(QtCore.QRect((((frameWidth - (5+21))/4)*(3-1))+31, 60, ((frameWidth - (5+21))/4)-10, 31))
         self.LTD.setObjectName("LTD")
+        self.LB = QtWidgets.QTextEdit(self.frame)
+        self.LB.setGeometry(QtCore.QRect((((frameWidth - (5+21))/4)*(4-1))+31, 60, ((frameWidth - (5+21))/4)-10, 31))
+        self.LB.setObjectName("LB")
         self.label = QtWidgets.QLabel(self.frame)
-        self.label.setGeometry(QtCore.QRect(30, 10, 71, 51))
+        self.label.setGeometry(QtCore.QRect((((frameWidth - (5+21))/4)*(1-1))+31, 10, ((frameWidth - (5+21))/4)-10, 51))
         font = QtGui.QFont()
         font.setPointSize(12)
         self.label.setFont(font)
@@ -134,7 +163,7 @@ class Ui_MainWindow(object):
         self.label.setWordWrap(True)
         self.label.setObjectName("label")
         self.label_2 = QtWidgets.QLabel(self.frame)
-        self.label_2.setGeometry(QtCore.QRect(105, 10, 71, 51))
+        self.label_2.setGeometry(QtCore.QRect((((frameWidth - (5+21))/4)*(2-1))+31, 10, ((frameWidth - (5+21))/4)-10, 51))
         font = QtGui.QFont()
         font.setPointSize(12)
         self.label_2.setFont(font)
@@ -142,20 +171,38 @@ class Ui_MainWindow(object):
         self.label_2.setWordWrap(True)
         self.label_2.setObjectName("label_2")
         self.label_3 = QtWidgets.QLabel(self.frame)
-        self.label_3.setGeometry(QtCore.QRect(180, 10, 71, 51))
+        self.label_3.setGeometry(QtCore.QRect((((frameWidth - (5+21))/4)*(3-1))+31, 10, ((frameWidth - (5+21))/4)-10, 51))
         font = QtGui.QFont()
         font.setPointSize(12)
         self.label_3.setFont(font)
         self.label_3.setAlignment(QtCore.Qt.AlignCenter)
         self.label_3.setWordWrap(True)
         self.label_3.setObjectName("label_3")
+        
+        self.LB_label = QtWidgets.QLabel(self.frame)
+        self.LB_label.setGeometry(QtCore.QRect((((frameWidth - (5+21))/4)*(4-1))+31, 10, ((frameWidth - (5+21))/4)-10, 51))
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.LB_label.setFont(font)
+        self.LB_label.setAlignment(QtCore.Qt.AlignCenter)
+        self.LB_label.setWordWrap(True)
+        self.LB_label.setObjectName("LB_label")
+        
+        #Cost frame
+        #Text edit geometry
+        #Padding 5
+        #Budget X: 5
+        #Other: (((frameWidth - (5+21))/4)*(1-1))+31
+        #Text edit size
+        #Bugdet:21
+        #Other: ((frameWidth - (5+21))/4)-10
         self.frame_2 = QtWidgets.QFrame(self.data_tab)
-        self.frame_2.setGeometry(QtCore.QRect(300, 370, 256, 121))
+        self.frame_2.setGeometry(QtCore.QRect((self.width/3)*(2-1)+10, 370, (self.width/3)-20, 121))
         self.frame_2.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame_2.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_2.setObjectName("frame_2")
         self.Cbudget = QtWidgets.QTextEdit(self.frame_2)
-        self.Cbudget.setGeometry(QtCore.QRect(10, 60, 21, 31))
+        self.Cbudget.setGeometry(QtCore.QRect(5, 60, 21, 31))
         self.Cbudget.setObjectName("Budget")
         self.costAdd = QtWidgets.QPushButton(self.frame_2)
         self.costAdd.setGeometry(QtCore.QRect(50, 90, 61, 32))
@@ -170,10 +217,10 @@ class Ui_MainWindow(object):
         self.costModify.setObjectName("costModify")
         self.costModify.clicked.connect(self.modifyRow)
         self.CLDD = QtWidgets.QTextEdit(self.frame_2)
-        self.CLDD.setGeometry(QtCore.QRect(35, 60, 51, 31))
+        self.CLDD.setGeometry(QtCore.QRect((((frameWidth - (5+21))/4)*(1-1))+31, 60, ((frameWidth - (5+21))/4)-10, 31))
         self.CLDD.setObjectName("CLDD")
         self.label_10 = QtWidgets.QLabel(self.frame_2)
-        self.label_10.setGeometry(QtCore.QRect(35, 10, 51, 51))
+        self.label_10.setGeometry(QtCore.QRect((((frameWidth - (5+21))/4)*(1-1))+31, 10, ((frameWidth - (5+21))/4)-10, 51))
         font = QtGui.QFont()
         font.setPointSize(12)
         self.label_10.setFont(font)
@@ -181,7 +228,7 @@ class Ui_MainWindow(object):
         self.label_10.setWordWrap(True)
         self.label_10.setObjectName("label_10")
         self.label_11 = QtWidgets.QLabel(self.frame_2)
-        self.label_11.setGeometry(QtCore.QRect(90, 10, 51, 51))
+        self.label_11.setGeometry(QtCore.QRect((((frameWidth - (5+21))/4)*(2-1))+31, 10, ((frameWidth - (5+21))/4)-10, 51))
         font = QtGui.QFont()
         font.setPointSize(12)
         self.label_11.setFont(font)
@@ -189,10 +236,10 @@ class Ui_MainWindow(object):
         self.label_11.setWordWrap(True)
         self.label_11.setObjectName("label_11")
         self.CLSD = QtWidgets.QTextEdit(self.frame_2)
-        self.CLSD.setGeometry(QtCore.QRect(90, 60, 51, 31))
+        self.CLSD.setGeometry(QtCore.QRect((((frameWidth - (5+21))/4)*(2-1))+31, 60, ((frameWidth - (5+21))/4)-10, 31))
         self.CLSD.setObjectName("CLSD")
         self.label_12 = QtWidgets.QLabel(self.frame_2)
-        self.label_12.setGeometry(QtCore.QRect(145, 10, 51, 51))
+        self.label_12.setGeometry(QtCore.QRect((((frameWidth - (5+21))/4)*(3-1))+31, 10, ((frameWidth - (5+21))/4)-10, 51))
         font = QtGui.QFont()
         font.setPointSize(12)
         self.label_12.setFont(font)
@@ -200,10 +247,10 @@ class Ui_MainWindow(object):
         self.label_12.setWordWrap(True)
         self.label_12.setObjectName("label_12")
         self.CLTD = QtWidgets.QTextEdit(self.frame_2)
-        self.CLTD.setGeometry(QtCore.QRect(145, 60, 51, 31))
+        self.CLTD.setGeometry(QtCore.QRect((((frameWidth - (5+21))/4)*(3-1))+31, 60, ((frameWidth - (5+21))/4)-10, 31))
         self.CLTD.setObjectName("CLTD")
         self.label_19 = QtWidgets.QLabel(self.frame_2)
-        self.label_19.setGeometry(QtCore.QRect(193, 10, 61, 51))
+        self.label_19.setGeometry(QtCore.QRect((((frameWidth - (5+21))/4)*(4-1))+31, 10, ((frameWidth - (5+21))/4)-10, 51))
         font = QtGui.QFont()
         font.setPointSize(12)
         self.label_19.setFont(font)
@@ -211,10 +258,19 @@ class Ui_MainWindow(object):
         self.label_19.setWordWrap(True)
         self.label_19.setObjectName("label_19")
         self.CLB = QtWidgets.QTextEdit(self.frame_2)
-        self.CLB.setGeometry(QtCore.QRect(200, 60, 51, 31))
+        self.CLB.setGeometry(QtCore.QRect((((frameWidth - (5+21))/4)*(4-1))+31, 60, ((frameWidth - (5+21))/4)-10, 31))
         self.CLB.setObjectName("CLB")
+
+        #Return frame
+        #Text edit geometry
+        #Padding 5
+        #Budget X: 5
+        #Other: (((frameWidth - (5+21))/5)*(1-1))+31
+        #Text edit size
+        #Bugdet:21
+        #Other: ((frameWidth - (5+21))/5)-10
         self.frame_3 = QtWidgets.QFrame(self.data_tab)
-        self.frame_3.setGeometry(QtCore.QRect(580, 370, 311, 121))
+        self.frame_3.setGeometry(QtCore.QRect((self.width/3)*(3-1)+10, 370, (self.width/3)-20, 121))
         self.frame_3.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame_3.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_3.setObjectName("frame_3")
@@ -231,13 +287,13 @@ class Ui_MainWindow(object):
         self.returnModify.setObjectName("returnModify")
         self.returnModify.clicked.connect(self.modifyRow)
         self.Rbudget = QtWidgets.QTextEdit(self.frame_3)
-        self.Rbudget.setGeometry(QtCore.QRect(10, 60, 21, 31))
+        self.Rbudget.setGeometry(QtCore.QRect(5, 60, 21, 31))
         self.Rbudget.setObjectName("Budget")
         self.RABCB = QtWidgets.QTextEdit(self.frame_3)
-        self.RABCB.setGeometry(QtCore.QRect(35, 60, 51, 31))
+        self.RABCB.setGeometry(QtCore.QRect((((frameWidth - (5+21))/5)*(1-1))+31, 60, ((frameWidth - (5+21))/5)-10, 31))
         self.RABCB.setObjectName("RABCB")
         self.label_21 = QtWidgets.QLabel(self.frame_3)
-        self.label_21.setGeometry(QtCore.QRect(35, 10, 51, 51))
+        self.label_21.setGeometry(QtCore.QRect((((frameWidth - (5+21))/5)*(1-1))+31, 10, ((frameWidth - (5+21))/5)-10, 51))
         font = QtGui.QFont()
         font.setPointSize(12)
         self.label_21.setFont(font)
@@ -245,7 +301,7 @@ class Ui_MainWindow(object):
         self.label_21.setWordWrap(True)
         self.label_21.setObjectName("label_21")
         self.label_22 = QtWidgets.QLabel(self.frame_3)
-        self.label_22.setGeometry(QtCore.QRect(90, 10, 51, 51))
+        self.label_22.setGeometry(QtCore.QRect((((frameWidth - (5+21))/5)*(2-1))+31, 10, ((frameWidth - (5+21))/5)-10, 51))
         font = QtGui.QFont()
         font.setPointSize(12)
         self.label_22.setFont(font)
@@ -253,10 +309,10 @@ class Ui_MainWindow(object):
         self.label_22.setWordWrap(True)
         self.label_22.setObjectName("label_22")
         self.RABOB = QtWidgets.QTextEdit(self.frame_3)
-        self.RABOB.setGeometry(QtCore.QRect(90, 60, 51, 31))
+        self.RABOB.setGeometry(QtCore.QRect((((frameWidth - (5+21))/5)*(2-1))+31, 60, ((frameWidth - (5+21))/5)-10, 31))
         self.RABOB.setObjectName("RABOB")
         self.label_23 = QtWidgets.QLabel(self.frame_3)
-        self.label_23.setGeometry(QtCore.QRect(145, 10, 51, 51))
+        self.label_23.setGeometry(QtCore.QRect((((frameWidth - (5+21))/5)*(3-1))+31, 10, ((frameWidth - (5+21))/5)-10, 51))
         font = QtGui.QFont()
         font.setPointSize(12)
         self.label_23.setFont(font)
@@ -264,10 +320,10 @@ class Ui_MainWindow(object):
         self.label_23.setWordWrap(True)
         self.label_23.setObjectName("label_23")
         self.RAGS = QtWidgets.QTextEdit(self.frame_3)
-        self.RAGS.setGeometry(QtCore.QRect(145, 60, 51, 31))
+        self.RAGS.setGeometry(QtCore.QRect((((frameWidth - (5+21))/5)*(3-1))+31, 60, ((frameWidth - (5+21))/5)-10, 31))
         self.RAGS.setObjectName("RAGS")
         self.label_24 = QtWidgets.QLabel(self.frame_3)
-        self.label_24.setGeometry(QtCore.QRect(200, 10, 61, 51))
+        self.label_24.setGeometry(QtCore.QRect((((frameWidth - (5+21))/5)*(4-1))+31, 10, ((frameWidth - (5+21))/5)-10, 51))
         font = QtGui.QFont()
         font.setPointSize(12)
         self.label_24.setFont(font)
@@ -275,10 +331,10 @@ class Ui_MainWindow(object):
         self.label_24.setWordWrap(True)
         self.label_24.setObjectName("label_24")
         self.RADB = QtWidgets.QTextEdit(self.frame_3)
-        self.RADB.setGeometry(QtCore.QRect(200, 60, 51, 31))
+        self.RADB.setGeometry(QtCore.QRect((((frameWidth - (5+21))/5)*(4-1))+31, 60, ((frameWidth - (5+21))/5)-10, 31))
         self.RADB.setObjectName("RADB")
         self.label_25 = QtWidgets.QLabel(self.frame_3)
-        self.label_25.setGeometry(QtCore.QRect(250, 10, 61, 51))
+        self.label_25.setGeometry(QtCore.QRect((((frameWidth - (5+21))/5)*(5-1))+31, 10, ((frameWidth - (5+21))/5)-10, 51))
         font = QtGui.QFont()
         font.setPointSize(12)
         self.label_25.setFont(font)
@@ -286,7 +342,7 @@ class Ui_MainWindow(object):
         self.label_25.setWordWrap(True)
         self.label_25.setObjectName("label_25")
         self.RAA = QtWidgets.QTextEdit(self.frame_3)
-        self.RAA.setGeometry(QtCore.QRect(255, 60, 51, 31))
+        self.RAA.setGeometry(QtCore.QRect((((frameWidth - (5+21))/5)*(5-1))+31, 60, ((frameWidth - (5+21))/5)-10, 31))
         self.RAA.setObjectName("RAA")
         self.tabWidget.addTab(self.data_tab, "")
         self.contraint_tab = QtWidgets.QWidget()
@@ -323,12 +379,14 @@ class Ui_MainWindow(object):
         self.menuBar.setObjectName("menuBar")
         self.menuFiles = QtWidgets.QMenu(self.menuBar)
         self.menuFiles.setObjectName("menuFiles")
+        # self.menuFiles.triggered.connect(self.browseFile)
         MainWindow.setMenuBar(self.menuBar)
         self.statusBar = QtWidgets.QStatusBar(MainWindow)
         self.statusBar.setObjectName("statusBar")
         MainWindow.setStatusBar(self.statusBar)
         self.actionAdd_Excel_file = QtWidgets.QAction(MainWindow)
         self.actionAdd_Excel_file.setObjectName("actionAdd_Excel_file")
+        self.actionAdd_Excel_file.triggered.connect(self.browseFile)
         self.menuFiles.addAction(self.actionAdd_Excel_file)
         self.menuBar.addAction(self.menuFiles.menuAction())
 
@@ -352,6 +410,8 @@ class Ui_MainWindow(object):
 "Saving Deposit"))
         self.label_3.setText(_translate("MainWindow", "LTD \n"
 "Term Deposit"))
+        self.LB_label.setText(_translate("MainWindow", "LB \n"
+"Borrowings"))
         self.costAdd.setText(_translate("MainWindow", "Add"))
         self.costRemove.setText(_translate("MainWindow", "Remove"))
         self.costModify.setText(_translate("MainWindow", "Clear"))
@@ -576,6 +636,10 @@ class Ui_MainWindow(object):
         self.tabWidget.setCurrentIndex(1)
     def calculate(self):
         self.tabWidget.setCurrentIndex(2)
+
+    def browseFile(self):
+        self.folderPath = QtWidgets.QFileDialog.getExistingDirectory(self, 'Select folder')
+        print(self.folderPath)
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
