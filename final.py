@@ -76,35 +76,33 @@ for i in range(0, 8):
 
 
 #%%
-# individual = toolbox.individual()
-# print(individual)
-# data = pd.read_excel("data.xlsx", None)  # Load all sheets
-# for i in range(0, 8):        
-#     objective = \
-#         data['Return'].iloc[i]['RABCB']*individual[0][i] + \
-#         data['Return'].iloc[i]['RABOB']*individual[1][i] + \
-#         data['Return'].iloc[i]['RAGS']*individual[2][i] + \
-#         data['Return'].iloc[i]['RADB']*individual[3][i] + \
-#         data['Return'].iloc[i]['RAA']*individual[4][i] - \
-#         data['Liquidity'].iloc[i]['LDD']*data['Cost'].iloc[i]['CLDD'] - \
-#         data['Liquidity'].iloc[i]['LSD']*data['Cost'].iloc[i]['CLSD'] - \
-#         data['Liquidity'].iloc[i]['LTD']*data['Cost'].iloc[i]['CLTD'] - \
-#         data['Liquidity'].iloc[i]['LB']*individual[5][i]
-# print(objective)
-# Evalutation Function
-
-
-
-
-    return 0
-    # if (constraint1 <= 6) and \
-    #     (0 <= individual[0]) and (0 <= individual[1]):
-    #     return objectiveFunc, 
-    # else:
-    #     return -1000,    
+# Our evaluation function
+import evaluation
+#evaluation.evalALM()
 
 #%%
-toolbox.register("evaluate", evalALM)
+toolbox.register("evaluate", evaluation.evalALM)
 toolbox.register("mate", tools.cxTwoPoints)
 toolbox.register("mutate", tools.mutFlipBit, indpb=0.09)
 toolbox.register("select", tools.selTournament, tournsize=10)
+
+
+def main():
+    random.seed(SEEDNBR)
+
+    
+    pop = toolbox.population(n=1000)
+    hof = tools.HallOfFame(10)
+    stats = tools.Statistics(lambda ind: ind.fitness.values)
+    stats.register("avg", numpy.mean, axis=0)
+    stats.register("std", numpy.std, axis=0)
+    stats.register("min", numpy.min, axis=0)
+    stats.register("max", numpy.max, axis=0)
+    
+    algorithms.eaSimple(pop, toolbox, cxpb=0.6, mutpb=0.6, ngen=50, stats=stats,
+                        halloffame=hof, verbose=True)
+    print(pop[0:5])
+    return pop, stats, hof
+                 
+if __name__ == "__main__":
+    main()                 

@@ -3,7 +3,7 @@ from math import isclose
 
 def evalALM(individual):
     data = pd.read_excel("data.xlsx", None)  # Load all sheets
-    print(data)
+    # print(data)
     NBR_BUCKETS = 8
     # For the purpose of readibility, I rewrite individual elements
     # which are our variables in another way   
@@ -13,18 +13,18 @@ def evalALM(individual):
     ADB  = individual[3]
     AA   = individual[4]
     LB   = individual[5]
-    print("ABCB: ")
-    print(ABCB)
-    print("ABOB")
-    print(ABOB)
-    print("AGS")
-    print(AGS)
-    print("ADB")
-    print(ADB)
-    print("AA")
-    print(AA)
-    print("LB")
-    print(LB)
+    # print("ABCB: ")
+    # print(ABCB)
+    # print("ABOB")
+    # print(ABOB)
+    # print("AGS")
+    # print(AGS)
+    # print("ADB")
+    # print(ADB)
+    # print("AA")
+    # print(AA)
+    # print("LB")
+    # print(LB)
     objective = 0
     # Objective Function
     for i in range(0, 8):
@@ -38,20 +38,20 @@ def evalALM(individual):
             data['Liquidity'].iloc[i]['LSD']*data['Cost'].iloc[i]['CLSD'] - \
             data['Liquidity'].iloc[i]['LTD']*data['Cost'].iloc[i]['CLTD'] - \
             data['Cost'].iloc[i]['CLB']*LB[i]
-        print(i)
-        print('return')
-        print(data['Return'].iloc[i]['RABCB']*ABCB[i] + \
-            data['Return'].iloc[i]['RABOB']*ABOB[i] + \
-            data['Return'].iloc[i]['RAGS']*AGS[i] + \
-            data['Return'].iloc[i]['RADB']*ADB[i] + \
-            data['Return'].iloc[i]['RAA']*AA[i])
-        print('cost')
-        print(data['Liquidity'].iloc[i]['LDD']*data['Cost'].iloc[i]['CLDD'] - \
-            data['Liquidity'].iloc[i]['LSD']*data['Cost'].iloc[i]['CLSD'] - \
-            data['Liquidity'].iloc[i]['LTD']*data['Cost'].iloc[i]['CLTD'] - \
-            data['Cost'].iloc[i]['CLB']*LB[i])
-        print()
-    print(objective)
+        # print(i)
+        # print('return')
+        # print(data['Return'].iloc[i]['RABCB']*ABCB[i] + \
+        #     data['Return'].iloc[i]['RABOB']*ABOB[i] + \
+        #     data['Return'].iloc[i]['RAGS']*AGS[i] + \
+        #     data['Return'].iloc[i]['RADB']*ADB[i] + \
+        #     data['Return'].iloc[i]['RAA']*AA[i])
+        # # print('cost')
+        # print(data['Liquidity'].iloc[i]['LDD']*data['Cost'].iloc[i]['CLDD'] - \
+        #     data['Liquidity'].iloc[i]['LSD']*data['Cost'].iloc[i]['CLSD'] - \
+        #     data['Liquidity'].iloc[i]['LTD']*data['Cost'].iloc[i]['CLTD'] - \
+        #     data['Cost'].iloc[i]['CLB']*LB[i])
+        # print()
+    # print(objective)
     
     # -------------
     # Constraint 1
@@ -72,7 +72,7 @@ def evalALM(individual):
                 data['Liquidity'].iloc[i]['LDD'] - \
                 data['Liquidity'].iloc[i]['LSD'] - \
                 data['Liquidity'].iloc[i]['LTD'] - \
-                LB[i]
+                LB[i]      
         LHS_constraint_1.append(temp)
 
     constraint_1 = True
@@ -81,11 +81,11 @@ def evalALM(individual):
         if not (round(LHS_constraint_1[i],10) == 0):
             constraint_1 = False
             exit
-    print("LHS constraint_1")
-    print(LHS_constraint_1)
-    print(constraint_1)
-    print("End LHS contraint 1")
-    print()
+    # print("LHS constraint_1")
+    # print(LHS_constraint_1)
+    # print(constraint_1)
+    # print("End LHS contraint 1")
+    # print()
     # -------------
 
 
@@ -100,11 +100,13 @@ def evalALM(individual):
         TotalTermAdvances += AA[i]    
     constraint_2 = True
     for i in range(NBR_BUCKETS):
-        if not (AA[i] >= 0.05 * TotalTermAdvances):
+        if not (round(AA[i],10) >= 0.05 * round(TotalTermAdvances, 10)):
+            # print(AA[i])
+            # print(0.05*TotalTermAdvances)
             constraint_2 = False
-            exit        
-    print('contraint 2')
-    print(constraint_2)
+            exit
+    # print('contraint 2: ' +str(constraint_2))
+    
     # -------------
     
     # -------------
@@ -116,12 +118,17 @@ def evalALM(individual):
         totalAssets += ABCB[i] + ABOB[i] + AGS[i] + ADB[i] + AA[i]
     
     constraint_3 = True
+    # print()
     for i in range(NBR_BUCKETS):
-        if not (ABCB[i] - 0.05 * totalAssets >= 0):
+        # print()
+        # print(ABCB[i] - 0.05 * totalAssets)
+
+        if not (round(ABCB[i] - 0.05 * totalAssets, 10) >= 0):
             constraint_3 = False
             exit    
-    print('contraint 3')
-    print(constraint_3)
+    # print('contraint 3: ' +str(constraint_3))
+    # print()
+    # print()
     # -------------
     
     # -------------
@@ -133,11 +140,15 @@ def evalALM(individual):
         totalBalanceWithCentralBank += 0.05 * ABCB[i]
     
     constraint_4 = True
-    if not (ABCB[7] >= 0.05 * totalBalanceWithCentralBank):
+    # print()
+    # print(ABCB[7])
+    # print(0.05 * totalBalanceWithCentralBank)
+    # print()
+    if not (round(ABCB[7] - 0.05 * totalBalanceWithCentralBank, 10) >= 0):
         constraint_4 = False
         exit
-    print('contraint 4')
-    print(constraint_4)
+    # print('contraint 4: '+str(constraint_4))
+    
     # -------------
 
 
@@ -149,9 +160,10 @@ def evalALM(individual):
     for i in range(NBR_BUCKETS):
         total_AGS += AGS[i]
     constraint_5 = True
-    if not (AGS[7] >= 0.05 * total_AGS):
+    if not (round(AGS[7] -0.05 * total_AGS, 10) >= 0):
         constraint_5 = False
         exit
+    # print('contraint 5: '+str(constraint_5))
     # -------------
 
     # -------------
@@ -162,9 +174,10 @@ def evalALM(individual):
     for i in range(NBR_BUCKETS):
         total_ADB += ADB[i]
     constraint_6 = True
-    if not (ADB[7] >= 0.05 * total_ADB):
+    if not (round(ADB[7] - 0.05 * total_ADB, 10)>= 0):
         constraint_6 = False
         exit
+    # print('contraint 6: '+str(constraint_6))
     # -------------
 
     # -------------
@@ -181,11 +194,11 @@ def evalALM(individual):
                           data['Liquidity'].iloc[i]['LSD'] + \
                           data['Liquidity'].iloc[i]['LTD']
     
-    if total_AGS >= 0.24 * total_deposits:
+    if round(total_AGS - 0.24 * total_deposits, 10)>= 0:
         constraint_7 = True
     else:
         constraint_7 = False
-    
+    # print('contraint 7: '+str(constraint_7))
     # -------------
     # Constraint 8
     # The total investment in assets in each bucket should be less than 
@@ -195,9 +208,10 @@ def evalALM(individual):
     constraint_8 = True
     for i in range(NBR_BUCKETS):
         temp = ABCB[i] + ABOB[i] + AGS[i] + ADB[i] + AA[i] - total_deposits
-        if not (temp <= 0):
+        if not (round(temp, 10) <= 0):
             constraint_8 = False
             exit
+    # print('contraint 8: '+str(constraint_8))
     # -------------
     # Constraint 9
     # Borrowings in bucket 1 should exceed 80% of total borrowings in all buckets.
@@ -205,15 +219,20 @@ def evalALM(individual):
     for i in range(NBR_BUCKETS):
         total_borrowings += LB[i]
     constraint_9 = False
-    if LB[0] >= 0.8 * total_borrowings:
+    if round(LB[0] - 0.8 * total_borrowings, 0)>= 0:
         constraint_9 = True
     
+    # print('contraint 9: '+str(constraint_9))
     # -------------
     # Contraint 10
     constraint_10 = True
-    for i in range(NBR_BUCKETS):
-        if not (LB[i] >= 0.05 * total_borrowings):
+    
+    # print(0.05 * total_borrowings)
+    for i in range(5,8):
+        # print("LB["+str(i)+"]"+str(LB[i]))
+        if not (round(LB[i] - 0.05 * total_borrowings, 10)>= 0):
             constraint_10 = False
+    # print('contraint 10: '+str(constraint_10))
     # -------------
 
     if constraint_1 and constraint_2 and constraint_3 and constraint_4 \
@@ -223,7 +242,7 @@ def evalALM(individual):
     else:
         return -100000,
 
-
+'''
 individual = [
     [25.3947368421052,
     25.3947368421052,
@@ -279,9 +298,9 @@ individual = [
     ]
 
 ]
-
+'''
 #%%
-print(evalALM(individual))
+# print(evalALM(individual))
  
  
             
