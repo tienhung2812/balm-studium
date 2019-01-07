@@ -30,11 +30,12 @@ class Ui_MainWindow(object):
 
         self.MainWindow = MainWindow
         MainWindow.setObjectName("MainWindow")
-        self.MainWindow.showMaximized()
+        # self.MainWindow.showMaximized()
+        MainWindow.resize(1024,768)
         self.width = self.MainWindow.width()
         self.height = self.MainWindow.height()
         self.MainWindow.setFixedSize(self.width, self.height)
-        # MainWindow.resize(915, 619)
+        
         self.centralWidget = QtWidgets.QWidget(MainWindow)
         self.centralWidget.setObjectName("centralWidget")
         self.tabWidget = QtWidgets.QTabWidget(self.centralWidget)
