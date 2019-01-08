@@ -1,18 +1,56 @@
 import pandas as pd
 from math import isclose
 
+<<<<<<< HEAD
 def evalALM(individual,data):
     # data = pd.read_excel("data.xlsx", None)  # Load all sheets
+=======
+RND_NBR = 3
+
+def evalALM(individual):
+    
+
+    data = pd.read_excel("data.xlsx", None)  # Load all sheets
+>>>>>>> d1732ad8f333e712ad8c67f095f9153ae16d4843
     # print(data)
     NBR_BUCKETS = 8
     # For the purpose of readibility, I rewrite individual elements
     # which are our variables in another way   
-    ABCB = individual[0]
-    ABOB = individual[1]
-    AGS  = individual[2]
-    ADB  = individual[3]
-    AA   = individual[4]
-    LB   = individual[5]
+    
+    # print(len(individual))
+    # print()
+    # print(individual)
+    # print(type(individual))
+    # print()
+    # ABCB = individual[0:8]
+    # ABOB = individual[8:16]
+    # AGS  = individual[16:24]
+    # ADB  = individual[24:32]
+    # AA   = individual[32:40]
+    # LB   = individual[40:48]
+    
+    ABCB = [None]*8
+    ABOB = [None]*8
+    AGS  = [None]*8
+    ADB = [None]*8
+    AA  = [None]*8
+    LB  = [None]*8
+
+    #ABCB[0], ABOB[0], AGS[0], ADB[0], AA[0], LB[0] = individual[0:6]
+    
+    start = 0 
+    for i in range(NBR_BUCKETS):        
+        ABCB[i], ABOB[i], AGS[i], ADB[i], AA[i], LB[i] = individual[start+0:start+6]
+        start += 6
+
+    # print(individual)
+    # ABCB = individual[0]
+    # ABOB = individual[1]
+    # AGS  = individual[2]
+    # ADB  = individual[3]
+    # AA   = individual[4]
+    # LB   = individual[5]
+    
     # print("ABCB: ")
     # print(ABCB)
     # print("ABOB")
@@ -25,9 +63,12 @@ def evalALM(individual,data):
     # print(AA)
     # print("LB")
     # print(LB)
+
     objective = 0
     # Objective Function
     for i in range(0, 8):
+        # print(type(data['Return'].iloc[i]['RABCB']))
+        # print(type(ABCB[i]))
         objective += \
             data['Return'].iloc[i]['RABCB']*ABCB[i] + \
             data['Return'].iloc[i]['RABOB']*ABOB[i] + \
@@ -78,7 +119,7 @@ def evalALM(individual,data):
     constraint_1 = True
     for i in range(NBR_BUCKETS):
 #        isclose(LHS_constraint_1[i], 0)
-        if not (round(LHS_constraint_1[i],10) == 0):
+        if not (round(LHS_constraint_1[i],RND_NBR) >= 0):
             constraint_1 = False
             exit
     # print("LHS constraint_1")
@@ -100,7 +141,7 @@ def evalALM(individual,data):
         TotalTermAdvances += AA[i]    
     constraint_2 = True
     for i in range(NBR_BUCKETS):
-        if not (round(AA[i],10) >= 0.05 * round(TotalTermAdvances, 10)):
+        if not (round(AA[i],3) >= 0.05 * round(TotalTermAdvances, 10)):
             # print(AA[i])
             # print(0.05*TotalTermAdvances)
             constraint_2 = False
@@ -234,7 +275,14 @@ def evalALM(individual,data):
             constraint_10 = False
     # print('contraint 10: '+str(constraint_10))
     # -------------
+    
+    # Test only!!
+    # if constraint_1:
+    #    return objective,
+    # else:
+    #     return -100000,
 
+    # Original
     if constraint_1 and constraint_2 and constraint_3 and constraint_4 \
        and constraint_5 and constraint_6 and constraint_7 and constraint_8 \
        and constraint_9 and constraint_10:
@@ -242,65 +290,130 @@ def evalALM(individual,data):
     else:
         return -100000,
 
-'''
-individual = [
-    [25.3947368421052,
-    25.3947368421052,
-    25.3947368421052,
-    25.3947368421052,
-    25.3947368421052,
-    25.3947368421052,
-    25.3947368421052,
-    25.3947368421052
-    ],
-    [0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0],
-    [43.8421052631575,
-    0,
-    0.368421052631654,
-    0,
-    0,
-    5.26315789473685,
-    5.26315789473687,
-    5.26315789473701],
-    [0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0],
-    [159.078947368421,
-    12.2368421052631,
-    12.2368421052631,
-    12.2368421052631,
-    12.2368421052631,
-    12.2368421052631,
-    12.2368421052631,
-    12.2368421052631
-],
-    [
-    206.315789473683,
-    4.63157894736848,
-    0,
-    0.631578947368373,
-    7.63157894736835,
-    12.8947368421052,
-    12.8947368421052,
-    12.8947368421052
-    ]
-
-]
-'''
 #%%
+
+# individual = [
+#     [25.3947368421052,
+#     25.3947368421052,
+#     25.3947368421052,
+#     25.3947368421052,
+#     25.3947368421052,
+#     25.3947368421052,
+#     25.3947368421052,
+#     25.3947368421052
+#     ],
+#     [0,
+#     0,
+#     0,
+#     0,
+#     0,
+#     0,
+#     0,
+#     0],
+#     [43.8421052631575,
+#     0,
+#     0.368421052631654,
+#     0,
+#     0,
+#     5.26315789473685,
+#     5.26315789473687,
+#     5.26315789473701],
+#     [0,
+#     0,
+#     0,
+#     0,
+#     0,
+#     0,
+#     0,
+#     0],
+#     [159.078947368421,
+#     12.2368421052631,
+#     12.2368421052631,
+#     12.2368421052631,
+#     12.2368421052631,
+#     12.2368421052631,
+#     12.2368421052631,
+#     12.2368421052631
+# ],
+#     [
+#     206.315789473683,
+#     4.63157894736848,
+#     0,
+#     0.631578947368373,
+#     7.63157894736835,
+#     12.8947368421052,
+#     12.8947368421052,
+#     12.8947368421052
+#     ]
+
+# ]
+
+# List of variables
+
+# individual = [
+#     25.3947368421052,
+#     25.3947368421052,
+#     25.3947368421052,
+#     25.3947368421052,
+#     25.3947368421052,
+#     25.3947368421052,
+#     25.3947368421052,
+#     25.3947368421052,
+#     0,
+#     0,
+#     0,
+#     0,
+#     0,
+#     0,
+#     0,
+#     0,
+#     43.8421052631575,
+#     0,
+#     0.368421052631654,
+#     0,
+#     0,
+#     5.26315789473685,
+#     5.26315789473687,
+#     5.26315789473701,
+#     0,
+#     0,
+#     0,
+#     0,
+#     0,
+#     0,
+#     0,
+#     0,
+#     159.078947368421,
+#     12.2368421052631,
+#     12.2368421052631,
+#     12.2368421052631,
+#     12.2368421052631,
+#     12.2368421052631,
+#     12.2368421052631,
+#     12.2368421052631,
+#     206.315789473683,
+#     4.63157894736848,
+#     0,
+#     0.631578947368373,
+#     7.63157894736835,
+#     12.8947368421052,
+#     12.8947368421052,
+#     12.8947368421052
+# ]
+
+# List of variables
+# individual = [
+#     25.3947368421052,	0,	43.8421052631575,	0,	159.078947368421, 206.315789473683,
+#     25.3947368421052,	0,	0,	0,	12.2368421052631, 4.63157894736848,
+#     25.3947368421052,	0,	0.368421052631654,	0,	12.2368421052631,0,
+#     25.3947368421052,	0,	0,	0,	12.2368421052631, 0.631578947368373,
+#     25.3947368421052,	0,	0,	0,	12.2368421052631, 7.63157894736835,
+#     25.3947368421052,	0,	5.26315789473685,	0,	12.2368421052631, 12.8947368421052,
+#     25.3947368421052,	0,	5.26315789473685,	0,	12.2368421052631, 12.8947368421052,
+#     25.3947368421052,	0,	5.26315789473685,	0,	12.2368421052631, 12.8947368421052
+#     ]
+
 # print(evalALM(individual))
  
- 
+
             
