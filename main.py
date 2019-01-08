@@ -7,24 +7,25 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QTableWidgetItem,QFileDialog
+from PyQt5.QtWidgets import QTableWidgetItem,QFileDialog, QAbstractItemView
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 # from PyQt5.QtGui import QFileDialog
 import pandas as pd 
 import numpy as np
+import evaluation
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         
         ##DATA
         
-        self.Liquidity = pd.DataFrame(columns=['budget', 'ldd','lsd','ltd','lb'])
+        self.Liquidity = pd.DataFrame(columns=['budget', 'LDD','LSD','LTD','LB'])
         self.Liquidity['budget'] = self.Liquidity['budget'].astype(int)
         self.Liquidity.set_index('budget')
-        self.Cost = pd.DataFrame(columns=['budget', 'cldd','clsd','cltd','clb'])
+        self.Cost = pd.DataFrame(columns=['budget', 'CLDD','CLSD','CLTD','CLB'])
         self.Cost.budget.astype(int)
         self.Cost.set_index('budget')
-        self.Return = pd.DataFrame(columns=['budget', 'rabcb','rabob','rags','radb','raa'])
+        self.Return = pd.DataFrame(columns=['budget', 'RABCB','RABOB','RAGS','RADB','RAA'])
         self.Return.budget.astype(int)
         self.Return.set_index('budget')
 
@@ -72,6 +73,8 @@ class Ui_MainWindow(object):
         self.liquidity_list.setGeometry(QtCore.QRect(((self.width/3)*(1-1))+10, 40, (self.width/3)-20, 321))
         self.liquidity_list.setObjectName("liquidity_list")
         self.liquidity_list.setHorizontalHeaderLabels(['Budget','LDD','LSD','LTD','LB'])
+        self.liquidity_list.setSelectionBehavior(QAbstractItemView.SelectRows)
+        self.liquidity_list.clicked.connect(self.rowClick)
         header = self.liquidity_list.horizontalHeader()
         for col in range(0,self.liquidity_list.columnCount()):
             header.setSectionResizeMode(int(col), QtWidgets.QHeaderView.Stretch)
@@ -89,7 +92,16 @@ class Ui_MainWindow(object):
         self.next_button.setAutoFillBackground(False)
         self.next_button.setObjectName("next_button")
         self.next_button.clicked.connect(self.nextTab)
+        self.next_button.setEnabled(False)
 
+        #Need add excel file status
+        self.status_label = QtWidgets.QLabel(self.data_tab)
+        self.status_label.setGeometry(QtCore.QRect(((self.width/3)*2)-((self.width/3)/2)-59/2-60, 530, 200, 16))
+        font = QtGui.QFont()
+        font.setPointSize(15)
+        self.status_label.setFont(font)
+        self.status_label.setAlignment(QtCore.Qt.AlignCenter)
+        self.status_label.setObjectName("status_label")
         # Cost List
         self.cost_list = QtWidgets.QTableWidget(8,5,self.data_tab)
         self.cost_list.setGeometry(QtCore.QRect(((self.width/3)*(2-1))+10, 40, (self.width/3)-20, 321))
@@ -97,6 +109,8 @@ class Ui_MainWindow(object):
         self.cost_list.setColumnCount(5)
         self.cost_list.setRowCount(0)
         self.cost_list.setHorizontalHeaderLabels(['Budget','CLDD','CLSD','CLTD','CLB'])
+        self.cost_list.setSelectionBehavior(QAbstractItemView.SelectRows)
+        self.cost_list.clicked.connect(self.rowClick)
         header = self.cost_list.horizontalHeader()
         for col in range(0,self.cost_list.columnCount()):
             header.setSectionResizeMode(int(col), QtWidgets.QHeaderView.Stretch)
@@ -107,6 +121,8 @@ class Ui_MainWindow(object):
         self.return_list.setColumnCount(6)
         self.return_list.setRowCount(0)
         self.return_list.setHorizontalHeaderLabels(['Budget','RABCB','RABOB','RAGS','RADB','RAA'])
+        self.return_list.clicked.connect(self.rowClick)
+        self.return_list.setSelectionBehavior(QAbstractItemView.SelectRows)
         header = self.return_list.horizontalHeader()
         for col in range(0,self.return_list.columnCount()):
             header.setSectionResizeMode(int(col), QtWidgets.QHeaderView.Stretch)
@@ -129,17 +145,19 @@ class Ui_MainWindow(object):
         self.frame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame.setObjectName("frame")
         self.liquidityAdd = QtWidgets.QPushButton(self.frame)
-        self.liquidityAdd.setGeometry(QtCore.QRect(50, 90, 61, 32))
+        self.liquidityAdd.setGeometry(QtCore.QRect(30, 90, 80, 32))
         self.liquidityAdd.setObjectName("liquidityAdd")
         self.liquidityAdd.clicked.connect(self.addRow)
-        self.liquidityRemove = QtWidgets.QPushButton(self.frame)
-        self.liquidityRemove.setGeometry(QtCore.QRect(170, 90, 81, 32))
-        self.liquidityRemove.setObjectName("liquidityRemove")
-        self.liquidityRemove.clicked.connect(self.removeRow)
+        self.liquidityAdd.setEnabled(False)
+        # self.liquidityRemove = QtWidgets.QPushButton(self.frame)
+        # self.liquidityRemove.setGeometry(QtCore.QRect(170, 90, 81, 32))
+        # self.liquidityRemove.setObjectName("liquidityRemove")
+        # self.liquidityRemove.clicked.connect(self.removeRow)
         self.liquidityModify = QtWidgets.QPushButton(self.frame)
         self.liquidityModify.setGeometry(QtCore.QRect(100, 90, 81, 32))
         self.liquidityModify.setObjectName("liquidityModify")
         self.liquidityModify.clicked.connect(self.modifyRow)
+        self.liquidityModify.setEnabled(False)
         self.Lbudget = QtWidgets.QTextEdit(self.frame)
         self.Lbudget.setGeometry(QtCore.QRect(5, 60, 21, 31))
         self.Lbudget.setObjectName("Budget")
@@ -206,17 +224,19 @@ class Ui_MainWindow(object):
         self.Cbudget.setGeometry(QtCore.QRect(5, 60, 21, 31))
         self.Cbudget.setObjectName("Budget")
         self.costAdd = QtWidgets.QPushButton(self.frame_2)
-        self.costAdd.setGeometry(QtCore.QRect(50, 90, 61, 32))
+        self.costAdd.setGeometry(QtCore.QRect(30, 90, 80, 32))
         self.costAdd.setObjectName("costAdd")
         self.costAdd.clicked.connect(self.addRow)
-        self.costRemove = QtWidgets.QPushButton(self.frame_2)
-        self.costRemove.setGeometry(QtCore.QRect(170, 90, 81, 32))
-        self.costRemove.setObjectName("costRemove")
-        self.costRemove.clicked.connect(self.removeRow)
+        self.costAdd.setEnabled(False)
+        # self.costRemove = QtWidgets.QPushButton(self.frame_2)
+        # self.costRemove.setGeometry(QtCore.QRect(170, 90, 81, 32))
+        # self.costRemove.setObjectName("costRemove")
+        # self.costRemove.clicked.connect(self.removeRow)
         self.costModify = QtWidgets.QPushButton(self.frame_2)
         self.costModify.setGeometry(QtCore.QRect(100, 90, 81, 32))
         self.costModify.setObjectName("costModify")
         self.costModify.clicked.connect(self.modifyRow)
+        self.costModify.setEnabled(False)
         self.CLDD = QtWidgets.QTextEdit(self.frame_2)
         self.CLDD.setGeometry(QtCore.QRect((((frameWidth - (5+21))/4)*(1-1))+31, 60, ((frameWidth - (5+21))/4)-10, 31))
         self.CLDD.setObjectName("CLDD")
@@ -276,17 +296,19 @@ class Ui_MainWindow(object):
         self.frame_3.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_3.setObjectName("frame_3")
         self.returnAdd = QtWidgets.QPushButton(self.frame_3)
-        self.returnAdd.setGeometry(QtCore.QRect(100, 90, 61, 32))
+        self.returnAdd.setGeometry(QtCore.QRect(80, 90, 80, 32))
         self.returnAdd.setObjectName("returnAdd")
         self.returnAdd.clicked.connect(self.addRow)
-        self.returnRemove = QtWidgets.QPushButton(self.frame_3)
-        self.returnRemove.setGeometry(QtCore.QRect(220, 90, 81, 32))
-        self.returnRemove.setObjectName("returnRemove")
-        self.returnRemove.clicked.connect(self.removeRow)
+        self.returnAdd.setEnabled(False)
+        # self.returnRemove = QtWidgets.QPushButton(self.frame_3)
+        # self.returnRemove.setGeometry(QtCore.QRect(220, 90, 81, 32))
+        # self.returnRemove.setObjectName("returnRemove")
+        # self.returnRemove.clicked.connect(self.removeRow)
         self.returnModify = QtWidgets.QPushButton(self.frame_3)
         self.returnModify.setGeometry(QtCore.QRect(150, 90, 81, 32))
         self.returnModify.setObjectName("returnModify")
         self.returnModify.clicked.connect(self.modifyRow)
+        self.returnModify.setEnabled(False)
         self.Rbudget = QtWidgets.QTextEdit(self.frame_3)
         self.Rbudget.setGeometry(QtCore.QRect(5, 60, 21, 31))
         self.Rbudget.setObjectName("Budget")
@@ -346,23 +368,24 @@ class Ui_MainWindow(object):
         self.RAA.setGeometry(QtCore.QRect((((frameWidth - (5+21))/5)*(5-1))+31, 60, ((frameWidth - (5+21))/5)-10, 31))
         self.RAA.setObjectName("RAA")
         self.tabWidget.addTab(self.data_tab, "")
-        self.contraint_tab = QtWidgets.QWidget()
-        self.contraint_tab.setObjectName("contraint_tab")
-        self.calculate_button = QtWidgets.QPushButton(self.contraint_tab)
-        self.calculate_button.setGeometry(QtCore.QRect(400, 500, 114, 32))
-        self.calculate_button.setObjectName("calculate_button")
-        self.calculate_button.clicked.connect(self.calculate)
-        self.contraint_table = QtWidgets.QTableWidget(self.contraint_tab)
-        self.contraint_table.setGeometry(QtCore.QRect(10, 10, 891, 411))
-        self.contraint_table.setObjectName("contraint_table")
-        self.contraint_table.setColumnCount(0)
-        self.contraint_table.setRowCount(0)
-        self.tabWidget.addTab(self.contraint_tab, "")
+        # self.contraint_tab = QtWidgets.QWidget()
+        # self.contraint_tab.setObjectName("contraint_tab")
+        # self.calculate_button = QtWidgets.QPushButton(self.contraint_tab)
+        # self.calculate_button.setGeometry(QtCore.QRect(400, 500, 114, 32))
+        # self.calculate_button.setObjectName("calculate_button")
+        # self.calculate_button.clicked.connect(self.calculate)
+        # self.contraint_table = QtWidgets.QTableWidget(self.contraint_tab)
+        # self.contraint_table.setGeometry(QtCore.QRect(10, 10, 891, 411))
+        # self.contraint_table.setObjectName("contraint_table")
+        # self.contraint_table.setColumnCount(0)
+        # self.contraint_table.setRowCount(0)
+        # self.tabWidget.addTab(self.contraint_tab, "")
         self.result_tab = QtWidgets.QWidget()
         self.result_tab.setObjectName("result_tab")
         self.result_list = QtWidgets.QTableWidget(self.result_tab)
-        self.result_list.setGeometry(QtCore.QRect(10, 10, 891, 411))
+        self.result_list.setGeometry(QtCore.QRect(10, 10, self.width-20, 411))
         self.result_list.setObjectName("result_list")
+        
         self.result_list.setColumnCount(0)
         self.result_list.setRowCount(0)
         self.objectiveFuntion_label = QtWidgets.QLabel(self.result_tab)
@@ -401,9 +424,10 @@ class Ui_MainWindow(object):
         self.return_label.setText(_translate("MainWindow", "Return"))
         self.liquidity_label.setText(_translate("MainWindow", "Liquidity"))
         self.cost_label.setText(_translate("MainWindow", "Cost"))
+        self.status_label.setText(_translate("MainWindow", "You need to add an excel file"))
         self.next_button.setText(_translate("MainWindow", "Next"))
-        self.liquidityAdd.setText(_translate("MainWindow", "Add"))
-        self.liquidityRemove.setText(_translate("MainWindow", "Remove"))
+        self.liquidityAdd.setText(_translate("MainWindow", "Change"))
+        # self.liquidityRemove.setText(_translate("MainWindow", "Remove"))
         self.liquidityModify.setText(_translate("MainWindow", "Clear"))
         self.label.setText(_translate("MainWindow", "LDD \n"
 "Demand Deposit"))
@@ -413,8 +437,8 @@ class Ui_MainWindow(object):
 "Term Deposit"))
         self.LB_label.setText(_translate("MainWindow", "LB \n"
 "Borrowings"))
-        self.costAdd.setText(_translate("MainWindow", "Add"))
-        self.costRemove.setText(_translate("MainWindow", "Remove"))
+        self.costAdd.setText(_translate("MainWindow", "Change"))
+        # self.costRemove.setText(_translate("MainWindow", "Remove"))
         self.costModify.setText(_translate("MainWindow", "Clear"))
         self.label_10.setText(_translate("MainWindow", "CLDD \n"
 "Demand Deposit"))
@@ -424,8 +448,8 @@ class Ui_MainWindow(object):
 "Term Deposit"))
         self.label_19.setText(_translate("MainWindow", "Borrowing\n"
 "CLB"))
-        self.returnAdd.setText(_translate("MainWindow", "Add"))
-        self.returnRemove.setText(_translate("MainWindow", "Remove"))
+        self.returnAdd.setText(_translate("MainWindow", "Change"))
+        # self.returnRemove.setText(_translate("MainWindow", "Remove"))
         self.returnModify.setText(_translate("MainWindow", "Clear"))
         self.label_21.setText(_translate("MainWindow", "central bank\n"
 "RABCB"))
@@ -436,8 +460,8 @@ class Ui_MainWindow(object):
         self.label_25.setText(_translate("MainWindow", "Advances \n"
 "RAA"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.data_tab), _translate("MainWindow", "Data"))
-        self.calculate_button.setText(_translate("MainWindow", "Calculate"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.contraint_tab), _translate("MainWindow", "Constraints"))
+        # self.calculate_button.setText(_translate("MainWindow", "Calculate"))
+        # self.tabWidget.setTabText(self.tabWidget.indexOf(self.contraint_tab), _translate("MainWindow", "Constraints"))
         self.objectiveFuntion_label.setText(_translate("MainWindow", "Objective Function: "))
         self.objectiveFuntion_label_2.setText(_translate("MainWindow", "Number"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.result_tab), _translate("MainWindow", "Result"))
@@ -448,19 +472,19 @@ class Ui_MainWindow(object):
         # print("Add Row")
         #Specify table
         senderBtn = self.MainWindow.sender()
-        if(senderBtn == self.liquidityAdd or senderBtn == self.liquidityRemove):
+        if(senderBtn == self.liquidityAdd):
             data = self.composeData(0)
             if(data!=None):
                 self.Liquidity.loc[data[0]] = data
             # print("Liquidity")
             # print(self.Liquidity)
-        elif(senderBtn == self.costAdd or senderBtn == self.costRemove):
+        elif(senderBtn == self.costAdd):
             data = self.composeData(1)
             if(data!=None):
                 self.Cost.loc[data[0]] = data
             # print("Cost")
             # print(self.Cost)
-        elif(senderBtn == self.returnAdd or senderBtn == self.returnRemove):
+        elif(senderBtn == self.returnAdd ):
             data = self.composeData(2)
             if(data!=None):
                 self.Return.loc[data[0]] = data
@@ -470,7 +494,25 @@ class Ui_MainWindow(object):
             print("Error")
             return
         self.refreshTable()
-        
+    def addExelRow(self,table,data):
+        # table
+        # Liquidity = 1
+        # Cost = 2
+        # Return = 3
+        # print(data)
+        if(table==1):
+            if(data!=None):
+                self.Liquidity.loc[data[0]] = data
+        elif (table==2):
+            if(data!=None):
+                self.Cost.loc[data[0]] = data
+        elif(table ==3):
+            if(data!=None):
+                self.Return.loc[data[0]] = data
+        else: 
+            print("AddExcelRow errror")
+            return
+        self.refreshTable()
     def modifyRow(self):
         # print("Modify Row")
         #Specify table
@@ -617,7 +659,33 @@ class Ui_MainWindow(object):
         # print(data)
         return data
         
-    
+    def checkData(self,data):
+        # return null if erorr
+        
+         ##Check Null
+        for i in data:
+            if(str(i) == ""):
+                self.showdialog("Please fill all the field")
+                return
+            #Check is Number
+            try:
+                a = float(i)
+            except:
+                self.showdialog("Number only: "+i )
+                return
+        #check Budget is int
+        try:
+                a = int(data[0])
+        except:
+            self.showdialog("Budget must be in int")
+            return
+        for i in range(0,len(data)):
+            if(i==0):
+                data[i] = int(data[i])
+            else:
+                data[i] = float(data[i])
+        # print(data)
+        return data
             
         # print(table)
     def showdialog(self,text):
@@ -635,17 +703,157 @@ class Ui_MainWindow(object):
 
     def nextTab(self):
         self.tabWidget.setCurrentIndex(1)
-    def calculate(self):
-        self.tabWidget.setCurrentIndex(2)
+        individual = [
+            [25.3947368421052,
+            25.3947368421052,
+            25.3947368421052,
+            25.3947368421052,
+            25.3947368421052,
+            25.3947368421052,
+            25.3947368421052,
+            25.3947368421052
+            ],
+            [0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0],
+            [43.8421052631575,
+            0,
+            0.368421052631654,
+            0,
+            0,
+            5.26315789473685,
+            5.26315789473687,
+            5.26315789473701],
+            [0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0],
+            [159.078947368421,
+            12.2368421052631,
+            12.2368421052631,
+            12.2368421052631,
+            12.2368421052631,
+            12.2368421052631,
+            12.2368421052631,
+            12.2368421052631
+        ],
+            [
+            206.315789473683,
+            4.63157894736848,
+            0,
+            0.631578947368373,
+            7.63157894736835,
+            12.8947368421052,
+            12.8947368421052,
+            12.8947368421052
+            ]
+        ]
+        # ]self.Liquidity = pd.DataFrame(columns=['budget', 'LDD','LSD','LTD','LB'])
+        # data = pd.DataFrame(columns=['Liquidity','Cost','Return'])
+        self.data['Liquidity'] = self.Liquidity
+        self.data['Cost'] = self.Cost
+        self.data['Return']= self.Return
+        print(evaluation.evalALM(individual,self.data))
+    # def calculate(self):
+    #     self.tabWidget.setCurrentIndex(2)
 
     def browseFile(self):
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
-        fileName, _ = QFileDialog.getOpenFileName(MainWindow,"QFileDialog.getOpenFileName()", "","All Files (*);;Python Files (*.xlsx)", options=options)
+        fileName, _ = QFileDialog.getOpenFileName(MainWindow,"Open data Excel file", "","All Files (*);;Excel Files (*.xlsx)", options=options)
         if fileName:
-            print(fileName)
+            self.readExcel(fileName)
         # self.folderPath = QtWidgets.QFileDialog.getExistingDirectory(MainWindow, 'Select folder')
         # print(self.folderPath)
+    
+    def composeExcel(self,table,sheet):
+        for index in sheet.index.values:
+            composedData = []
+            col = 0
+            for colData in sheet.loc[ index , : ]:
+                # print(type(colData))
+                colData = str(colData)
+                if(col == 0):
+                    try:
+                        colData = colData.replace("Bucket ","")
+                        colData = int(colData)
+                        # print(colData)
+                    except:
+                        print("Replace budget error")
+                    # print(colData)
+                composedData.append(colData)
+                col += 1
+            if(self.checkData(composedData) is not None):
+                self.addExelRow(table,composedData)
+    
+    def readExcel(self,filename):
+        try:
+            self.data = pd.read_excel(filename, None)  # Load all sheets
+            #Liquidity
+            self.composeExcel(1,self.data['Liquidity'])
+            self.composeExcel(2,self.data['Cost'])
+            self.composeExcel(3,self.data['Return'])
+
+            self.EnableButtonAfterAddExcel(True)
+        except:
+            self.showdialog("Error Excel file")
+            self.EnableButtonAfterAddExcel(False)
+    def EnableButtonAfterAddExcel(self,command):
+        #Enable button
+        self.next_button.setEnabled(command)
+        #Liquidity button
+        self.liquidityAdd.setEnabled(command)
+        self.liquidityModify.setEnabled(command)
+        #Cost
+        self.costAdd.setEnabled(command)
+        self.costModify.setEnabled(command)
+        #Return
+        self.returnAdd.setEnabled(command)
+        self.returnModify.setEnabled(command)
+        #Turn off status
+        if(command):
+            self.status_label.hide()
+        else:
+            self.status_label.show()
+    def rowClick(self,item):
+        senderTlb = self.MainWindow.sender()
+        budget = int(item.row())+1
+        if(senderTlb == self.liquidity_list):
+            # print("Liquidity list")
+            data = self.Liquidity.loc[budget]
+            self.Lbudget.setText(str(int(data['budget'])))
+            self.LDD.setText(str(float(data['LDD'])))
+            self.LSD.setText(str(float(data['LSD'])))
+            self.LTD.setText(str(float(data['LTD'])))
+            self.LB.setText(str(float(data['LB'])))
+        elif(senderTlb == self.cost_list):
+            data = self.Cost.loc[budget]
+            self.Cbudget.setText(str(int(data['budget'])))
+            self.CLB.setText(str(float(data['CLB'])))
+            self.CLDD.setText(str(float(data['CLDD'])))
+            self.CLSD.setText(str(float(data['CLSD'])))
+            self.CLTD.setText(str(float(data['CLTD'])))
+        elif(senderTlb == self.return_list):
+            data = self.Return.loc[budget]
+            self.Rbudget.setText(str(int(data['budget'])))
+            self.RAA.setText(str(float(data['RAA'])))
+            self.RABCB.setText(str(float(data['RABCB'])))
+            self.RABOB.setText(str(float(data['RABOB'])))
+            self.RADB.setText(str(float(data['RADB'])))
+            self.RAGS.setText(str(float(data['RAGS'])))
+        # cellContent = item.data()
+        # print(cellContent)  # test
+        # sf = "You clicked on {0}x{1}".format(item.column(), item.row())
+        # print(sf)
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)

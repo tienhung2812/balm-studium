@@ -1,8 +1,8 @@
 import pandas as pd
 from math import isclose
 
-def evalALM(individual):
-    data = pd.read_excel("data.xlsx", None)  # Load all sheets
+def evalALM(individual,data):
+    # data = pd.read_excel("data.xlsx", None)  # Load all sheets
     # print(data)
     NBR_BUCKETS = 8
     # For the purpose of readibility, I rewrite individual elements
