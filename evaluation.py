@@ -1,7 +1,7 @@
 import pandas as pd
 from math import isclose
 
-RND_NBR = 3
+RND_NBR = 10
 
 def evalALM(individual):
     
@@ -136,7 +136,7 @@ def evalALM(individual):
         TotalTermAdvances += AA[i]    
     constraint_2 = True
     for i in range(NBR_BUCKETS):
-        if not (round(AA[i],3) >= 0.05 * round(TotalTermAdvances, 10)):
+        if not (round(AA[i],3) >= 0.05 * round(TotalTermAdvances, RND_NBR)):
             # print(AA[i])
             # print(0.05*TotalTermAdvances)
             constraint_2 = False
@@ -159,7 +159,7 @@ def evalALM(individual):
         # print()
         # print(ABCB[i] - 0.05 * totalAssets)
 
-        if not (round(ABCB[i] - 0.05 * totalAssets, 10) >= 0):
+        if not (round(ABCB[i] - 0.05 * totalAssets, RND_NBR) >= 0):
             constraint_3 = False
             exit    
     # print('contraint 3: ' +str(constraint_3))
@@ -180,7 +180,7 @@ def evalALM(individual):
     # print(ABCB[7])
     # print(0.05 * totalBalanceWithCentralBank)
     # print()
-    if not (round(ABCB[7] - 0.05 * totalBalanceWithCentralBank, 10) >= 0):
+    if not (round(ABCB[7] - 0.05 * totalBalanceWithCentralBank, RND_NBR) >= 0):
         constraint_4 = False
         exit
     # print('contraint 4: '+str(constraint_4))
@@ -196,7 +196,7 @@ def evalALM(individual):
     for i in range(NBR_BUCKETS):
         total_AGS += AGS[i]
     constraint_5 = True
-    if not (round(AGS[7] -0.05 * total_AGS, 10) >= 0):
+    if not (round(AGS[7] -0.05 * total_AGS, RND_NBR) >= 0):
         constraint_5 = False
         exit
     # print('contraint 5: '+str(constraint_5))
@@ -210,7 +210,7 @@ def evalALM(individual):
     for i in range(NBR_BUCKETS):
         total_ADB += ADB[i]
     constraint_6 = True
-    if not (round(ADB[7] - 0.05 * total_ADB, 10)>= 0):
+    if not (round(ADB[7] - 0.05 * total_ADB, RND_NBR)>= 0):
         constraint_6 = False
         exit
     # print('contraint 6: '+str(constraint_6))
@@ -230,7 +230,7 @@ def evalALM(individual):
                           data['Liquidity'].iloc[i]['LSD'] + \
                           data['Liquidity'].iloc[i]['LTD']
     
-    if round(total_AGS - 0.24 * total_deposits, 10)>= 0:
+    if round(total_AGS - 0.24 * total_deposits, RND_NBR)>= 0:
         constraint_7 = True
     else:
         constraint_7 = False
@@ -244,7 +244,7 @@ def evalALM(individual):
     constraint_8 = True
     for i in range(NBR_BUCKETS):
         temp = ABCB[i] + ABOB[i] + AGS[i] + ADB[i] + AA[i] - total_deposits
-        if not (round(temp, 10) <= 0):
+        if not (round(temp, RND_NBR) <= 0):
             constraint_8 = False
             exit
     # print('contraint 8: '+str(constraint_8))
@@ -255,7 +255,7 @@ def evalALM(individual):
     for i in range(NBR_BUCKETS):
         total_borrowings += LB[i]
     constraint_9 = False
-    if round(LB[0] - 0.8 * total_borrowings, 0)>= 0:
+    if round(LB[0] - 0.8 * total_borrowings, RND_NBR)>= 0:
         constraint_9 = True
     
     # print('contraint 9: '+str(constraint_9))
@@ -266,7 +266,7 @@ def evalALM(individual):
     # print(0.05 * total_borrowings)
     for i in range(5,8):
         # print("LB["+str(i)+"]"+str(LB[i]))
-        if not (round(LB[i] - 0.05 * total_borrowings, 10)>= 0):
+        if not (round(LB[i] - 0.05 * total_borrowings, RND_NBR)>= 0):
             constraint_10 = False
     # print('contraint 10: '+str(constraint_10))
     # -------------
@@ -278,12 +278,26 @@ def evalALM(individual):
     #     return -100000,
 
     # Original
+
+    cond = [constraint_1, constraint_2, constraint_3, constraint_4,
+            constraint_5, constraint_6, constraint_7, constraint_8,
+            constraint_9]
+    count = 0
+    for c in cond:
+        if c:
+            count = count+1
+    
+    print(cond)
+    print(objective)
+    print(count)
     if constraint_1 and constraint_2 and constraint_3 and constraint_4 \
        and constraint_5 and constraint_6 and constraint_7 and constraint_8 \
-       and constraint_9 and constraint_10:
-       return objective,
+       and constraint_9 and constraint_10:                     
+       return objective, count,
+    elif count >= 7:
+        return objective, count, 
     else:
-        return -100000,
+        return objective, count,
 
 #%%
 
