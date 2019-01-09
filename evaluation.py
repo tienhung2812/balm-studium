@@ -1,12 +1,15 @@
 import pandas as pd
 from math import isclose
 
-RND_NBR = 10
+
+RND_NBR = 3
+
 
 def evalALM(individual):
     
 
     data = pd.read_excel("data.xlsx", None)  # Load all sheets
+
     # print(data)
     NBR_BUCKETS = 8
     # For the purpose of readibility, I rewrite individual elements
