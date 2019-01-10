@@ -39,7 +39,7 @@ class HallOfFame(object):
                            update the hall of fame with.
         """
         
-        # print("HALL OF FAME --")
+        
         
         if len(self) == 0 and self.maxsize !=0:
             # Working on an empty hall of fame is problematic for the
@@ -51,11 +51,12 @@ class HallOfFame(object):
         # print("")
         
         for ind in population:
-            countValue = ind.fitness.values[1]
-
+                                    
             ### NOTE: ind.fitness.values[0] --> The Fitness Value - Return value of Objective Function
             ###       ind.fitness.values[1] --> Count of sastified contraints
 
+            if not self.checkPositive(ind):
+                continue
 
             if ind.fitness.values[1] > self[-1].fitness.values[1] or len(self) < self.maxsize:
                 for hofer in self:
@@ -133,3 +134,10 @@ class HallOfFame(object):
     
     def __str__(self):
         return str(self.items)
+
+    def checkPositive(self, ind):
+        for i in ind:
+            if i <= 0:
+                return False
+        return True
+
