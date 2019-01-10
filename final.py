@@ -1,10 +1,13 @@
 
-#%%
-
 # The program is based on DEAP Framework
 # The program aims to solve the bank asset liability management problem
 # desbribed in the book Business Applications of Operation Research by Bodhibrata Nag
-# Author: Phat Vo Tan, CS2015 @ VGU
+# Authors: 
+# Phat Vo Tan
+# Hoang Thai Duong
+# Tran Huy Hoang
+# Nguyen Tien Hung
+# Class: CS2015, Vietnamese German Univerisy
 
 
 import random
@@ -19,16 +22,15 @@ from deap import tools
 # import from our implemented evaluation
 import evaluation
 
-# SISZE: The number of variables that we are trying to solve in the problem
-CHROMOSOME_SIZE = 6
 # Choosing Seed Number is crucial, each is corresponding to
-# a pseudo-random sequence of number
-SEEDNBR = 300
+# a pseudo-random sequence of number, 
 # we want to have the program run in deterministic way: the program generates
 # the same results everytime we run it
+SEEDNBR = 300
+
 random.seed(SEEDNBR)
-# Number of buckets
-NBR_BUCKETS = 8
+
+NBR_BUCKETS = 8 # Number of buckets
 class DEAP:
     def __init__(self,data,population,generation):
 
@@ -117,79 +119,15 @@ class DEAP:
 
 
     def main(self):        
-        random.seed(SEEDNBR)
-
-
-        pop = self.toolbox.population(n=self.population)
-        
         import hall_of_fame 
-        x = hall_of_fame
-        hof = tools.HallOfFame(10)
-        hof = hall_of_fame.HallOfFame(10)
-        # hof = x
-        
+        random.seed(SEEDNBR)
+        pop = self.toolbox.population(n=self.population)                                
+        hof = hall_of_fame.HallOfFame(10)        
         stats = tools.Statistics(lambda ind: ind.fitness.values)
-        stats.register("avg", numpy.mean, axis=0)
-        stats.register("std", numpy.std, axis=0)
-        stats.register("min", numpy.min, axis=0)
-        stats.register("max", numpy.max, axis=0)
-
-        
-
+    
         algorithms.eaSimple(pop, self.toolbox, cxpb=0.5, mutpb=0.4, ngen=self.generation, stats=stats,
                             halloffame=hof ,verbose=True)
 
-        # NGEN = 5
-        # MU = 50
-        # LAMBDA = 100
-        # CXPB = 0.7
-        # MUTPB = 0.2
-        # algorithms.eaMuPlusLambda(pop, self.toolbox, MU, LAMBDA, CXPB, MUTPB, NGEN, stats,
-        #                           halloffame=hof, verbose=True)
-
-        # print("HALL OF FAME")
-        # print("FIRST")
-        # data = hof[0]
-        
-        # # print(type(data))
-        # # print(data.fitness)
-        # start = 0
-        # print("FITNESS VALUE" + str(data.fitness.values[0]))
-        # print("COUNT: "+str(data.fitness.values[1]))
-        # for i in range(NBR_BUCKETS):
-        #     print(data[start+0:start+6])
-        #     print()
-        #     start += 6
-
-        # print("HALL OF FAME")
-        # print("SECOND")
-        # data = hof[1]
-        # # print(type(data))
-        # # print(data.fitness)
-        # start = 0
-        # print("FITNESS VALUE" + str(data.fitness.values[0]))
-        # print("COUNT: "+str(data.fitness.values[1]))
-        # for i in range(NBR_BUCKETS):
-        #     print(data[start+0:start+6])
-        #     print()
-        #     start += 6
-
-        # print("HALL OF FAME")
-        # print("LAST")
-        # data = hof[-1]
-        # # print(type(data))
-        # # print(data.fitness)
-        # start = 0
-        # print("FITNESS VALUE:\t" + str(data.fitness.values[0]))
-        # print("COUNT: "+str(data.fitness.values[1]))
-        # for i in range(NBR_BUCKETS):
-        #     print(data[start+0:start+6])
-        #     print()
-        #     start += 6
-
         return pop, stats, hof
 
-
-    # if __name__ == "__main__":
-    #     main()
 
