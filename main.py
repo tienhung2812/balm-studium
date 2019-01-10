@@ -14,6 +14,10 @@ from PyQt5.QtGui import *
 import pandas as pd 
 import numpy as np
 import evaluation
+import _thread
+import time
+import datetime
+from final import DEAP
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         
@@ -78,7 +82,7 @@ class Ui_MainWindow(object):
         header = self.liquidity_list.horizontalHeader()
         for col in range(0,self.liquidity_list.columnCount()):
             header.setSectionResizeMode(int(col), QtWidgets.QHeaderView.Stretch)
-        
+        self.liquidity_list.verticalHeader().setVisible(False)
         self.cost_label = QtWidgets.QLabel(self.data_tab)
         self.cost_label.setGeometry(QtCore.QRect(((self.width/3)*2)-((self.width/3)/2)-59/2, 20, 59, 16))
         font = QtGui.QFont()
@@ -87,7 +91,7 @@ class Ui_MainWindow(object):
         self.cost_label.setAlignment(QtCore.Qt.AlignCenter)
         self.cost_label.setObjectName("cost_label")
         self.next_button = QtWidgets.QPushButton(self.data_tab)
-        self.next_button.setGeometry(QtCore.QRect(self.width/2-114/2, 500, 114, 32))
+        self.next_button.setGeometry(QtCore.QRect(self.width/2-114/2, 590, 114, 32))
         self.next_button.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.next_button.setAutoFillBackground(False)
         self.next_button.setObjectName("next_button")
@@ -114,6 +118,7 @@ class Ui_MainWindow(object):
         header = self.cost_list.horizontalHeader()
         for col in range(0,self.cost_list.columnCount()):
             header.setSectionResizeMode(int(col), QtWidgets.QHeaderView.Stretch)
+        self.cost_list.verticalHeader().setVisible(False)
         # Return List
         self.return_list = QtWidgets.QTableWidget(8,6,self.data_tab)
         self.return_list.setGeometry(QtCore.QRect(((self.width/3)*(3-1))+10, 40, (self.width/3)-20, 321))
@@ -123,6 +128,7 @@ class Ui_MainWindow(object):
         self.return_list.setHorizontalHeaderLabels(['Budget','RABCB','RABOB','RAGS','RADB','RAA'])
         self.return_list.clicked.connect(self.rowClick)
         self.return_list.setSelectionBehavior(QAbstractItemView.SelectRows)
+        self.return_list.verticalHeader().setVisible(False)
         header = self.return_list.horizontalHeader()
         for col in range(0,self.return_list.columnCount()):
             header.setSectionResizeMode(int(col), QtWidgets.QHeaderView.Stretch)
@@ -382,20 +388,54 @@ class Ui_MainWindow(object):
         # self.tabWidget.addTab(self.contraint_tab, "")
         self.result_tab = QtWidgets.QWidget()
         self.result_tab.setObjectName("result_tab")
-        self.result_list = QtWidgets.QTableWidget(self.result_tab)
-        self.result_list.setGeometry(QtCore.QRect(10, 10, self.width-20, 411))
-        self.result_list.setObjectName("result_list")
+
+        self.result_printOut  = QtWidgets.QTextEdit(self.result_tab)
+        # self.result_printOut.setGeometry(QtCore.QRect(((self.width/3)*(3-1))+10, 40, (self.width/3)-20, 321))
+        self.result_printOut.setGeometry(QtCore.QRect(10, 10, (self.width-20)/4, 411))
+        self.result_printOut.moveCursor(QtGui.QTextCursor.Start)
+        self.result_printOut.ensureCursorVisible()
+        self.result_printOut.setLineWrapColumnOrWidth((self.width-20)/4)
+        self.result_printOut.setLineWrapMode(int((self.width-20)/4))
         
-        self.result_list.setColumnCount(0)
+        self.result_printOut.setObjectName("result_printOut")
+
+        # Cost List
+        self.result_list = QtWidgets.QTableWidget(8,7,self.result_tab)
+        self.result_list.setGeometry(QtCore.QRect((self.width-20)/4+20, 10, (self.width-20)/4*3-10, 411))
+        self.result_list.setObjectName("result_list")
+        self.result_list.setColumnCount(7)
         self.result_list.setRowCount(0)
+        self.result_list.setHorizontalHeaderLabels(['Budget','Borrowings\nLB','Balance with\nCentral Bank\nABCB','Balance with\nother banks\nABOB','Invest. in\ngovernment and sec.\nAGS','Investment in\ndebentures and bonds\nADB','Advances\nAA'])
+        self.result_list.setSelectionBehavior(QAbstractItemView.SelectRows)
+        # self.result_list.clicked.connect(self.rowClick)
+        header = self.result_list.horizontalHeader()
+        header.setSectionResizeMode(int(0), QtWidgets.QHeaderView.ResizeToContents)
+        for col in range(1,self.result_list.columnCount()):
+            header.setSectionResizeMode(int(col), QtWidgets.QHeaderView.Stretch)
+        self.result_list.verticalHeader().setVisible(False)
+        self.timer_label = QtWidgets.QLabel(self.result_tab)
+        self.timer_label.setGeometry(QtCore.QRect(310, 440, 200, 20))
+        self.timer_label.setAlignment(QtCore.Qt.AlignCenter)
+        self.timer_label.setObjectName("timer_label")
+
         self.objectiveFuntion_label = QtWidgets.QLabel(self.result_tab)
-        self.objectiveFuntion_label.setGeometry(QtCore.QRect(310, 440, 131, 20))
+        self.objectiveFuntion_label.setGeometry(QtCore.QRect(310, 480, 131, 20))
         self.objectiveFuntion_label.setAlignment(QtCore.Qt.AlignCenter)
         self.objectiveFuntion_label.setObjectName("objectiveFuntion_label")
         self.objectiveFuntion_label_2 = QtWidgets.QLabel(self.result_tab)
-        self.objectiveFuntion_label_2.setGeometry(QtCore.QRect(440, 440, 101, 20))
+        self.objectiveFuntion_label_2.setGeometry(QtCore.QRect(440, 480, 200, 20))
         self.objectiveFuntion_label_2.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
         self.objectiveFuntion_label_2.setObjectName("objectiveFuntion_label_2")
+
+        self.satisfiedConstraint_label = QtWidgets.QLabel(self.result_tab)
+        self.satisfiedConstraint_label.setGeometry(QtCore.QRect(245, 520, 200, 20))
+        self.satisfiedConstraint_label.setAlignment(QtCore.Qt.AlignCenter)
+        self.satisfiedConstraint_label.setObjectName("satisfiedConstraint_label")
+        self.satisfiedConstraint_label2 = QtWidgets.QLabel(self.result_tab)
+        self.satisfiedConstraint_label2.setGeometry(QtCore.QRect(440, 520, 200, 20))
+        self.satisfiedConstraint_label2.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
+        self.satisfiedConstraint_label2.setObjectName("satisfiedConstraint_label")
+
         self.tabWidget.addTab(self.result_tab, "")
         MainWindow.setCentralWidget(self.centralWidget)
         self.menuBar = QtWidgets.QMenuBar(MainWindow)
@@ -413,6 +453,31 @@ class Ui_MainWindow(object):
         self.actionAdd_Excel_file.triggered.connect(self.browseFile)
         self.menuFiles.addAction(self.actionAdd_Excel_file)
         self.menuBar.addAction(self.menuFiles.menuAction())
+
+        self.GenerationField = QtWidgets.QTextEdit(self.data_tab)
+        self.GenerationField.setGeometry(QtCore.QRect(((self.width/3)*(2-1))+10+100, 550, 50, 25))
+        self.GenerationField.setObjectName("GenerationField")
+        self.GenerationLabel = QtWidgets.QLabel(self.data_tab)
+        self.GenerationLabel.setGeometry(QtCore.QRect(((self.width/3)*(2-1))+10-70+100, 550, 70, 25))
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.GenerationLabel.setFont(font)
+        self.GenerationLabel.setAlignment(QtCore.Qt.AlignCenter)
+        self.GenerationLabel.setWordWrap(True)
+        self.GenerationLabel.setObjectName("GenerationLabel")
+
+        self.PopulationField = QtWidgets.QTextEdit(self.data_tab)
+        self.PopulationField.setGeometry(QtCore.QRect(((self.width/3)*(2-1))+10+140+100, 550, 50, 25))
+        self.PopulationField.setObjectName("PopulationField")
+        self.PopulationLabel = QtWidgets.QLabel(self.data_tab)
+        self.PopulationLabel.setGeometry(QtCore.QRect(((self.width/3)*(2-1))+10+70+100, 550, 70, 25))
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.PopulationLabel.setFont(font)
+        self.PopulationLabel.setAlignment(QtCore.Qt.AlignCenter)
+        self.PopulationLabel.setWordWrap(True)
+        self.PopulationLabel.setObjectName("GenerationLabel")
+
 
         self.retranslateUi(MainWindow)
         self.tabWidget.setCurrentIndex(0)
@@ -464,10 +529,25 @@ class Ui_MainWindow(object):
         # self.tabWidget.setTabText(self.tabWidget.indexOf(self.contraint_tab), _translate("MainWindow", "Constraints"))
         self.objectiveFuntion_label.setText(_translate("MainWindow", "Objective Function: "))
         self.objectiveFuntion_label_2.setText(_translate("MainWindow", "Number"))
+
+        self.satisfiedConstraint_label.setText(_translate("MainWindow", "Number of satified contraints: "))
+        self.satisfiedConstraint_label2.setText(_translate("MainWindow", "Number"))
+
+        self.timer_label.setText(_translate("MainWindow", "0:00"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.result_tab), _translate("MainWindow", "Result"))
         self.menuFiles.setTitle(_translate("MainWindow", "File"))
         self.actionAdd_Excel_file.setText(_translate("MainWindow", "Add Excel file"))
 
+        self.GenerationLabel.setText("Generation: ")
+        self.PopulationLabel.setText("Population: ")
+        self.GenerationField.setText("50")
+        self.PopulationField.setText("100")
+        # self.GenerationField.setText("1")
+        # self.PopulationField.setText("1")
+        sys.stdout = Stream(newText=self.onUpdateText)
+
+    def __del__(self):
+            sys.stdout = sys.__stdout__
     def addRow(self):
         # print("Add Row")
         #Specify table
@@ -600,6 +680,8 @@ class Ui_MainWindow(object):
                 table.insertRow(rowPosition)
                 col = 0
                 for colData in data.loc[ index , : ]:
+                    if(col==0):
+                        colData = index
                     # print(type(colData))
                     colData = str(colData)
                     table.setItem(rowPosition,col,QTableWidgetItem(colData))
@@ -762,9 +844,59 @@ class Ui_MainWindow(object):
         self.data['Liquidity'] = self.Liquidity
         self.data['Cost'] = self.Cost
         self.data['Return']= self.Return
-        print(evaluation.evalALM(individual,self.data))
+        import threading
+        self.counting = True
+        thread = threading.Thread(target=self.startCounting)
+        thread.start()
+        
+        self.eva = Evaluation(self.data,int(self.PopulationField.toPlainText()),int(self.GenerationField.toPlainText()))
+        self.eva.finished.connect(self.finishedEva)
+        self.eva.start()
+
+        
+        # print(evaluation.evalALM(individual,self.data))
     # def calculate(self):
     #     self.tabWidget.setCurrentIndex(2)
+    def finishedEva(self):
+        self.counting=False
+        data = self.eva.hof[-1]
+        
+        self.objectiveFuntion_label_2.setText(str(data.fitness.values[0]))
+        self.satisfiedConstraint_label2.setText(str(int(data.fitness.values[1]))+"/10")
+        table = self.result_list
+
+        ABCB = [None]*8
+        ABOB = [None]*8
+        AGS  = [None]*8
+        ADB = [None]*8
+        AA  = [None]*8
+        LB  = [None]*8
+
+        #ABCB[0], ABOB[0], AGS[0], ADB[0], AA[0], LB[0] = individual[0:6]
+        
+        start = 0 
+        for i in range(8):        
+            ABCB[i], ABOB[i], AGS[i], ADB[i], AA[i], LB[i] = data[start+0:start+6]
+            start += 6
+        #For Add to result_list table
+        table.setRowCount(0)
+        rawData = []
+        for i in range(8):
+            rowPosition = table.rowCount()
+            table.insertRow(rowPosition)
+            table.setItem(rowPosition,0,QTableWidgetItem(str(i+1)))
+            table.setItem(rowPosition,1,QTableWidgetItem(str(LB[i])))
+            table.setItem(rowPosition,2,QTableWidgetItem(str(ABCB[i])))
+            table.setItem(rowPosition,3,QTableWidgetItem(str(ABOB[i])))
+            table.setItem(rowPosition,4,QTableWidgetItem(str(AGS[i])))
+            table.setItem(rowPosition,5,QTableWidgetItem(str(ADB[i])))
+            table.setItem(rowPosition,6,QTableWidgetItem(str(AA[i])))
+            
+            
+            
+                
+                
+
 
     def browseFile(self):
         options = QFileDialog.Options()
@@ -854,6 +986,45 @@ class Ui_MainWindow(object):
         # print(cellContent)  # test
         # sf = "You clicked on {0}x{1}".format(item.column(), item.row())
         # print(sf)
+    def onUpdateText(self, text):
+        cursor = self.result_printOut.textCursor()
+        cursor.movePosition(QtGui.QTextCursor.End)
+        cursor.insertText(text)
+        self.result_printOut.setTextCursor(cursor)
+        self.result_printOut.ensureCursorVisible()
+    def startCounting(self):
+        countingtime = 0
+        while self.counting:
+            self.timer_label.setText("Evaluation time: "+str(datetime.timedelta(seconds=countingtime)))
+            time.sleep(1)
+            
+            countingtime+=1
+
+
+   
+class Stream(QtCore.QObject):
+    newText = QtCore.pyqtSignal(str)
+
+    def write(self, text):
+        self.newText.emit(str(text))
+
+class Evaluation(QThread):
+
+    def __init__(self,data,population,generation):
+        QThread.__init__(self)
+        self.data = data
+        self.population = population
+        self.generation = generation
+    def __del__(self):
+        self.wait()
+
+    def run(self):
+        result = DEAP(self.data,self.population,self.generation)
+        self.pop, self.stats, self.hof = result.main()
+        
+    
+        # self.counting = False
+
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)

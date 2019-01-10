@@ -39,16 +39,16 @@ class HallOfFame(object):
                            update the hall of fame with.
         """
         
-        print("HALL OF FAME --")
+        # print("HALL OF FAME --")
         
         if len(self) == 0 and self.maxsize !=0:
             # Working on an empty hall of fame is problematic for the
             # "for else"
-            print("NO THING in HALL OF FAME")
+            # print("NO THING in HALL OF FAME")
             self.insert(population[0])
-            print(self)
+            # print(self)
             
-        print("")
+        # print("")
         
         for ind in population:
             countValue = ind.fitness.values[1]

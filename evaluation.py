@@ -5,10 +5,10 @@ from math import isclose
 RND_NBR = 3
 
 
-def evalALM(individual):
+def evalALM(data,individual):
     
-
-    data = pd.read_excel("data.xlsx", None)  # Load all sheets
+    # print(data)
+    # data = pd.read_excel("data.xlsx", None)  # Load all sheets
 
     # print(data)
     NBR_BUCKETS = 8
@@ -284,15 +284,15 @@ def evalALM(individual):
 
     cond = [constraint_1, constraint_2, constraint_3, constraint_4,
             constraint_5, constraint_6, constraint_7, constraint_8,
-            constraint_9]
+            constraint_9,constraint_10]
     count = 0
     for c in cond:
         if c:
             count = count+1
     
-    print(cond)
-    print(objective)
-    print(count)
+    # print(cond)
+    # print(objective)
+    # print(count)
     if constraint_1 and constraint_2 and constraint_3 and constraint_4 \
        and constraint_5 and constraint_6 and constraint_7 and constraint_8 \
        and constraint_9 and constraint_10:                     
