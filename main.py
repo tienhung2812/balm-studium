@@ -597,20 +597,20 @@ class Ui_MainWindow(object):
         # print("Modify Row")
         #Specify table
         senderBtn = self.MainWindow.sender()
-        if(senderBtn == self.liquidityAdd or senderBtn == self.liquidityModify or senderBtn == self.liquidityRemove):
+        if(senderBtn == self.liquidityAdd or senderBtn == self.liquidityModify):
             self.Lbudget.clear()
             self.LDD.clear()
             self.LSD.clear()
             self.LTD.clear()
 
             # print(self.Liquidity)
-        elif(senderBtn == self.costAdd or senderBtn == self.costModify or senderBtn == self.costRemove):
+        elif(senderBtn == self.costAdd or senderBtn == self.costModify):
             self.Cbudget.clear()
             self.CLDD.clear()
             self.CLSD.clear()
             self.CLTD.clear()
             self.CLB.clear()
-        elif(senderBtn == self.returnAdd or senderBtn == self.returnModify or senderBtn == self.returnRemove):
+        elif(senderBtn == self.returnAdd or senderBtn == self.returnModify):
             self.Rbudget.clear()
             self.RABCB.clear()
             self.RABOB.clear()
