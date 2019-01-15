@@ -54,9 +54,20 @@ class HallOfFame(object):
                                     
             ### NOTE: ind.fitness.values[0] --> The Fitness Value - Return value of Objective Function
             ###       ind.fitness.values[1] --> Count of sastified contraints
-
+            # if ind.fitness.values[1] == 10:
+            #     print('found!!')
+            #     print(ind.fitness.values[0])
+            #     print()
             if not self.checkPositive(ind):
                 continue
+            #print(ind)
+            if ind.fitness.values[1] <= 5:
+                continue
+            if ind.fitness.values[0] < 0:
+                continue
+            # print("Oject: "+str(ind.fitness.values[0]))
+            # print("Count:" +str(ind.fitness.values[1]))
+            # print()
 
             if ind.fitness.values[1] > self[-1].fitness.values[1] or len(self) < self.maxsize:
                 for hofer in self:
@@ -74,7 +85,25 @@ class HallOfFame(object):
                  ind.fitness.values[0] >= self[-1].fitness.values[0]:
                  if len(self) >= self.maxsize:
                     self.remove(-1)
-                    self.insert(ind)                       
+                    self.insert(ind)      
+
+            # if ind.fitness.values[1] > self[-1].fitness.values[1] or len(self) < self.maxsize:
+            #     for hofer in self:
+            #         # Loop through the hall of fame to check for any
+            #         # similar individual
+            #         if self.similar(ind, hofer):
+            #             break
+            #         else:
+            #             # The individual is unique and strictly better than
+            #             # the worst
+            #             if len(self) >= self.maxsize:
+            #                 self.remove(-1)
+            #             self.insert(ind)
+            # elif ind.fitness.values[1] == self[-1].fitness.values[1] and \
+            #      ind.fitness.values[0] >= self[-1].fitness.values[0]:
+            #      if len(self) >= self.maxsize:
+            #         self.remove(-1)
+            #         self.insert(ind)                       
 
                                             
             # if ind.fitness > self[-1].fitness or len(self) < self.maxsize:            
@@ -88,7 +117,7 @@ class HallOfFame(object):
             #         # the worst
             #         if len(self) >= self.maxsize:
             #             self.remove(-1)
-            #         self.insert(ind)
+            #         self.insert(ind)        
     
     def insert(self, item):
         """Insert a new individual in the hall of fame using the

@@ -2,7 +2,7 @@ import pandas as pd
 from math import isclose
 
 
-RND_NBR = 3
+RND_NBR = 10
 
 
 def evalALM(data,individual):    
@@ -213,10 +213,10 @@ def evalALM(data,individual):
        and constraint_5 and constraint_6 and constraint_7 and constraint_8 \
        and constraint_9 and constraint_10:                     
        return objective, count,
-    elif count >= 7:
-        return objective, count, 
+    # elif count >= 7:
+    #     return objective, count, 
     else:
-        return 0, 0,
+        return objective, count,
 
 
  

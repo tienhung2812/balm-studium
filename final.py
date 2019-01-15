@@ -46,9 +46,30 @@ class DEAP:
         # Our evaluation function
 
         self.toolbox.register("evaluate", evaluation.evalALM,data)
-        self.toolbox.register("mate", tools.cxBlend, alpha=0.5)
-        self.toolbox.register("mutate", tools.mutUniformInt, low=0, up=48, indpb=0.5)
-        self.toolbox.register("select", tools.selTournament, tournsize=3)
+        self.toolbox.register("mate", tools.cxOnePoint)
+        
+        l = [23, 0, 0, 0, 12, 0,
+            23, 0, 0, 0, 12, 0,
+            23, 0, 0, 0, 12, 0,
+            23, 0, 0, 0, 12, 0,
+            23, 0, 0, 0, 12, 0,
+            23, 0, 0, 0, 12, 0,
+            23, 0, 0, 0, 12, 0,
+            23, 0, 0, 0, 12, 0
+        ]
+        u = [
+            27,1, 44, 1, 160, 207,
+            27,1, 44, 1, 160, 207,
+            27,1, 44, 1, 160, 207,
+            27,1, 44, 1, 160, 207,
+            27,1, 44, 1, 160, 207,
+            27,1, 44, 1, 160, 207,
+            27,1, 44, 1, 160, 207,
+            27,1, 44, 1, 160, 207
+        ]
+        self.toolbox.register("mutate", tools.mutUniformInt, low=l, up=u, indpb=0.5)
+        self.toolbox.register("select", tools.selBest)
+
 
         self.population = population
         self.generation = generation
@@ -56,64 +77,71 @@ class DEAP:
 
     def init2d(self,icls):
         # types of assets or liabilities, each has 8 values corresponding to 8 buckets
+        u1=12
+        u2=0.05        
+        u3=10
+        u4=0.05
+        u5=85
+        u6=130
         indGenerator = [
-            random.uniform(23, 27),
-            random.uniform(0, 1),
-            random.uniform(0, 44),
-            random.uniform(0, 1),
-            random.uniform(12, 160),
-            random.uniform(0, 207),  # end one bucket
+            
+            random.uniform(0, u1),
+            random.uniform(0, u2),
+            random.uniform(0, u3),
+            random.uniform(0, u4),
+            random.uniform(0, u5),
+            random.uniform(0, u6),  # end one bucket
 
-            random.uniform(23, 27),
-            random.uniform(0, 1),
-            random.uniform(0, 44),
-            random.uniform(0, 1),
-            random.uniform(12, 160),
-            random.uniform(0, 207),  # end one bucket
+            random.uniform(0, u1),
+            random.uniform(0, u2),
+            random.uniform(0, u3),
+            random.uniform(0, u4),
+            random.uniform(0, u5),
+            random.uniform(0, u6),  # end one bucket
 
-            random.uniform(23, 27),
-            random.uniform(0, 1),
-            random.uniform(0, 44),
-            random.uniform(0, 1),
-            random.uniform(12, 160),
-            random.uniform(0, 207),  # end one bucket
+            random.uniform(0, u1),
+            random.uniform(0, u2),
+            random.uniform(0, u3),
+            random.uniform(0, u4),
+            random.uniform(0, u5),
+            random.uniform(0, u6),  # end one bucket
 
-            random.uniform(23, 27),
-            random.uniform(0, 1),
-            random.uniform(0, 44),
-            random.uniform(0, 1),
-            random.uniform(12, 160),
-            random.uniform(0, 207),  # end one bucket
+            random.uniform(0, u1),
+            random.uniform(0, u2),
+            random.uniform(0, u3),
+            random.uniform(0, u4),
+            random.uniform(0, u5),
+            random.uniform(0, u6),  # end one bucket
 
-            random.uniform(23, 27),
-            random.uniform(0, 1),
-            random.uniform(0, 44),
-            random.uniform(0, 1),
-            random.uniform(12, 160),
-            random.uniform(0, 207),  # end one bucket
+            random.uniform(0, u1),
+            random.uniform(0, u2),
+            random.uniform(0, u3),
+            random.uniform(0, u4),
+            random.uniform(0, u5),
+            random.uniform(0, u6),  # end one bucket
 
-            random.uniform(23, 27),
-            random.uniform(0, 1),
-            random.uniform(0, 44),
-            random.uniform(0, 1),
-            random.uniform(12, 160),
-            random.uniform(0, 207),  # end one bucket
+            random.uniform(0, u1),
+            random.uniform(0, u2),
+            random.uniform(0, u3),
+            random.uniform(0, u4),
+            random.uniform(0, u5),
+            random.uniform(0, u6),  # end one bucket
 
-            random.uniform(23, 27),
-            random.uniform(0, 1),
-            random.uniform(0, 44),
-            random.uniform(0, 1),
-            random.uniform(12, 160),
-            random.uniform(0, 207),  # end one bucket
+            random.uniform(0, u1),
+            random.uniform(0, u2),
+            random.uniform(0, u3),
+            random.uniform(0, u4),
+            random.uniform(0, u5),
+            random.uniform(0, u6),  # end one bucket
 
-            random.uniform(23, 27),
-            random.uniform(0, 1),
-            random.uniform(0, 44),
-            random.uniform(0, 1),
-            random.uniform(12, 160),
-            random.uniform(0, 207)  # end one bucket
+            random.uniform(0, u1),
+            random.uniform(0, u2),
+            random.uniform(0, u3),
+            random.uniform(0, u4),
+            random.uniform(0, u5),
+            random.uniform(0, u6),  # end one bucket            
         ]
-
+        
         return icls(indGenerator)
 
 
@@ -125,9 +153,9 @@ class DEAP:
         hof = hall_of_fame.HallOfFame(10)        
         stats = tools.Statistics(lambda ind: ind.fitness.values)
     
-        algorithms.eaSimple(pop, self.toolbox, cxpb=0.5, mutpb=0.4, ngen=self.generation, stats=stats,
-                            halloffame=hof ,verbose=True)
-
+        algorithms.eaSimple(pop, self.toolbox, cxpb=0.5, mutpb=0.2, ngen=self.generation, stats=stats,
+                            halloffame=hof ,verbose=False)
+        
         return pop, stats, hof
 
 
