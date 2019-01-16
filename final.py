@@ -154,7 +154,7 @@ class DEAP:
         stats = tools.Statistics(lambda ind: ind.fitness.values)
     
         algorithms.eaSimple(pop, self.toolbox, cxpb=0.5, mutpb=0.2, ngen=self.generation, stats=stats,
-                            halloffame=hof ,verbose=False)
+                            halloffame=hof ,verbose=True)
         
         return pop, stats, hof
 
