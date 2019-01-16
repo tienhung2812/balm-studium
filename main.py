@@ -83,6 +83,7 @@ class Ui_MainWindow(object):
         for col in range(0,self.liquidity_list.columnCount()):
             header.setSectionResizeMode(int(col), QtWidgets.QHeaderView.Stretch)
         self.liquidity_list.verticalHeader().setVisible(False)
+        self.liquidity_list.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.cost_label = QtWidgets.QLabel(self.data_tab)
         self.cost_label.setGeometry(QtCore.QRect(((self.width/3)*2)-((self.width/3)/2)-59/2, 20, 59, 16))
         font = QtGui.QFont()
@@ -115,6 +116,7 @@ class Ui_MainWindow(object):
         self.cost_list.setHorizontalHeaderLabels(['Budget','CLDD','CLSD','CLTD','CLB'])
         self.cost_list.setSelectionBehavior(QAbstractItemView.SelectRows)
         self.cost_list.clicked.connect(self.rowClick)
+        self.cost_list.setEditTriggers(QAbstractItemView.NoEditTriggers)
         header = self.cost_list.horizontalHeader()
         for col in range(0,self.cost_list.columnCount()):
             header.setSectionResizeMode(int(col), QtWidgets.QHeaderView.Stretch)
@@ -129,6 +131,7 @@ class Ui_MainWindow(object):
         self.return_list.clicked.connect(self.rowClick)
         self.return_list.setSelectionBehavior(QAbstractItemView.SelectRows)
         self.return_list.verticalHeader().setVisible(False)
+        self.return_list.setEditTriggers(QAbstractItemView.NoEditTriggers)
         header = self.return_list.horizontalHeader()
         for col in range(0,self.return_list.columnCount()):
             header.setSectionResizeMode(int(col), QtWidgets.QHeaderView.Stretch)
@@ -407,6 +410,7 @@ class Ui_MainWindow(object):
         self.result_list.setRowCount(0)
         self.result_list.setHorizontalHeaderLabels(['Budget','Borrowings\nLB','Balance with\nCentral Bank\nABCB','Balance with\nother banks\nABOB','Invest. in\ngovernment and sec.\nAGS','Investment in\ndebentures and bonds\nADB','Advances\nAA'])
         self.result_list.setSelectionBehavior(QAbstractItemView.SelectRows)
+        self.result_list.setEditTriggers(QAbstractItemView.NoEditTriggers)
         # self.result_list.clicked.connect(self.rowClick)
         header = self.result_list.horizontalHeader()
         header.setSectionResizeMode(int(0), QtWidgets.QHeaderView.ResizeToContents)
