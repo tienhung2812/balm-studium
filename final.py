@@ -66,14 +66,14 @@ class DEAP:
             23, 0, 0, 0, 12, 0
         ]
         u = [
-            27,1, 44, 1, 160, 207,
-            27,1, 44, 1, 160, 207,
-            27,1, 44, 1, 160, 207,
-            27,1, 44, 1, 160, 207,
-            27,1, 44, 1, 160, 207,
-            27,1, 44, 1, 160, 207,
-            27,1, 44, 1, 160, 207,
-            27,1, 44, 1, 160, 207
+            27,1, 44, 1, 160-10, 207,
+            27,1, 44, 1, 160-10, 207,
+            27,1, 44, 1, 160-10, 207,
+            27,1, 44, 1, 160-10, 207,
+            27,1, 44, 1, 160-10, 207,
+            27,1, 44, 1, 160-10, 207,
+            27,1, 44, 1, 160-10, 207,
+            27,1, 44, 1, 160-10, 207
         ]
         from mutation import mutUniformFloat 
         self.toolbox.register("mutate", mutUniformFloat, low=l, up=u, indpb=0.5)
@@ -164,8 +164,8 @@ class DEAP:
         pop = self.toolbox.population(n=self.population)                                
         hof = hall_of_fame.HallOfFame(20)        
         stats = tools.Statistics(lambda ind: ind.fitness.values)
-    
-        algorithms.eaSimple(pop, self.toolbox, cxpb=0.5, mutpb=0.2, ngen=self.generation, stats=stats,
+        from algorithm import eaSimple
+        eaSimple(pop, self.toolbox, cxpb=0.5, mutpb=0.2, ngen=self.generation, stats=stats,
                             halloffame=hof ,verbose=True)
         
         return pop, stats, hof
