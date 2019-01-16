@@ -209,14 +209,8 @@ def evalALM(data,individual):
         if c:
             count = count+1
     
-    if constraint_1 and constraint_2 and constraint_3 and constraint_4 \
-       and constraint_5 and constraint_6 and constraint_7 and constraint_8 \
-       and constraint_9 and constraint_10:                     
-       return objective, count,
-    # elif count >= 7:
-    #     return objective, count, 
-    else:
-        return objective, count,
+
+    return objective, count,
 
 
  

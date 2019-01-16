@@ -61,7 +61,7 @@ class HallOfFame(object):
             if not self.checkPositive(ind):
                 continue
             #print(ind)
-            if ind.fitness.values[1] <= 5:
+            if ind.fitness.values[1] < 8:
                 continue
             if ind.fitness.values[0] < 0:
                 continue

@@ -1,4 +1,5 @@
 
+
 # The program is based on DEAP Framework
 # The program aims to solve the bank asset liability management problem
 # desbribed in the book Business Applications of Operation Research by Bodhibrata Nag
@@ -8,6 +9,8 @@
 # Tran Huy Hoang
 # Nguyen Tien Hung
 # Class: CS2015, Vietnamese German Univerisy
+
+
 
 
 import random
@@ -22,13 +25,17 @@ from deap import tools
 # import from our implemented evaluation
 import evaluation
 
+
+
+
 # Choosing Seed Number is crucial, each is corresponding to
 # a pseudo-random sequence of number, 
 # we want to have the program run in deterministic way: the program generates
 # the same results everytime we run it
-SEEDNBR = 300
+#SEEDNBR = 300
 
-random.seed(SEEDNBR)
+#random.seed(SEEDNBR)
+random.seed(None)
 
 NBR_BUCKETS = 8 # Number of buckets
 class DEAP:
@@ -51,6 +58,7 @@ class DEAP:
         l = [23, 0, 0, 0, 12, 0,
             23, 0, 0, 0, 12, 0,
             23, 0, 0, 0, 12, 0,
+            
             23, 0, 0, 0, 12, 0,
             23, 0, 0, 0, 12, 0,
             23, 0, 0, 0, 12, 0,
@@ -67,8 +75,11 @@ class DEAP:
             27,1, 44, 1, 160, 207,
             27,1, 44, 1, 160, 207
         ]
-        self.toolbox.register("mutate", tools.mutUniformInt, low=l, up=u, indpb=0.5)
-        self.toolbox.register("select", tools.selBest)
+        from mutation import mutUniformFloat 
+        self.toolbox.register("mutate", mutUniformFloat, low=l, up=u, indpb=0.5)
+        #self.toolbox.register("mutate", tools.mutUniformInt, low=l, up=u, indpb=0.5)
+        from sort import bubbleSort as bs
+        self.toolbox.register("select", bs)
 
 
         self.population = population
@@ -148,9 +159,10 @@ class DEAP:
 
     def main(self):        
         import hall_of_fame 
-        random.seed(SEEDNBR)
+        #random.seed(SEEDNBR)
+        random.seed(None)
         pop = self.toolbox.population(n=self.population)                                
-        hof = hall_of_fame.HallOfFame(10)        
+        hof = hall_of_fame.HallOfFame(20)        
         stats = tools.Statistics(lambda ind: ind.fitness.values)
     
         algorithms.eaSimple(pop, self.toolbox, cxpb=0.5, mutpb=0.2, ngen=self.generation, stats=stats,

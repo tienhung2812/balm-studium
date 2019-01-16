@@ -23,20 +23,20 @@ class Ui_MainWindow(object):
         
         ##DATA
         
-        self.Liquidity = pd.DataFrame(columns=['budget', 'LDD','LSD','LTD','LB'])
-        self.Liquidity['budget'] = self.Liquidity['budget'].astype(int)
-        self.Liquidity.set_index('budget')
-        self.Cost = pd.DataFrame(columns=['budget', 'CLDD','CLSD','CLTD','CLB'])
-        self.Cost.budget.astype(int)
-        self.Cost.set_index('budget')
-        self.Return = pd.DataFrame(columns=['budget', 'RABCB','RABOB','RAGS','RADB','RAA'])
-        self.Return.budget.astype(int)
-        self.Return.set_index('budget')
+        self.Liquidity = pd.DataFrame(columns=['bucket', 'LDD','LSD','LTD','LB'])
+        self.Liquidity['bucket'] = self.Liquidity['bucket'].astype(int)
+        self.Liquidity.set_index('bucket')
+        self.Cost = pd.DataFrame(columns=['bucket', 'CLDD','CLSD','CLTD','CLB'])
+        self.Cost.bucket.astype(int)
+        self.Cost.set_index('bucket')
+        self.Return = pd.DataFrame(columns=['bucket', 'RABCB','RABOB','RAGS','RADB','RAA'])
+        self.Return.bucket.astype(int)
+        self.Return.set_index('bucket')
 
         self.MainWindow = MainWindow
         MainWindow.setObjectName("MainWindow")
         # self.MainWindow.showMaximized()
-        MainWindow.resize(1280,800)
+        MainWindow.resize(1448,800)
         self.width = self.MainWindow.width()
         self.height = self.MainWindow.height()
         self.MainWindow.setFixedSize(self.width, self.height)
@@ -76,7 +76,7 @@ class Ui_MainWindow(object):
         self.liquidity_list.setRowCount(0)
         self.liquidity_list.setGeometry(QtCore.QRect(((self.width/3)*(1-1))+10, 40, (self.width/3)-20, 321))
         self.liquidity_list.setObjectName("liquidity_list")
-        self.liquidity_list.setHorizontalHeaderLabels(['Budget','LDD','LSD','LTD','LB'])
+        self.liquidity_list.setHorizontalHeaderLabels(['Bucket','LDD','LSD','LTD','LB'])
         self.liquidity_list.setSelectionBehavior(QAbstractItemView.SelectRows)
         self.liquidity_list.clicked.connect(self.rowClick)
         header = self.liquidity_list.horizontalHeader()
@@ -112,7 +112,7 @@ class Ui_MainWindow(object):
         self.cost_list.setObjectName("cost_list")
         self.cost_list.setColumnCount(5)
         self.cost_list.setRowCount(0)
-        self.cost_list.setHorizontalHeaderLabels(['Budget','CLDD','CLSD','CLTD','CLB'])
+        self.cost_list.setHorizontalHeaderLabels(['Bucket','CLDD','CLSD','CLTD','CLB'])
         self.cost_list.setSelectionBehavior(QAbstractItemView.SelectRows)
         self.cost_list.clicked.connect(self.rowClick)
         header = self.cost_list.horizontalHeader()
@@ -125,7 +125,7 @@ class Ui_MainWindow(object):
         self.return_list.setObjectName("return_list")
         self.return_list.setColumnCount(6)
         self.return_list.setRowCount(0)
-        self.return_list.setHorizontalHeaderLabels(['Budget','RABCB','RABOB','RAGS','RADB','RAA'])
+        self.return_list.setHorizontalHeaderLabels(['Bucket','RABCB','RABOB','RAGS','RADB','RAA'])
         self.return_list.clicked.connect(self.rowClick)
         self.return_list.setSelectionBehavior(QAbstractItemView.SelectRows)
         self.return_list.verticalHeader().setVisible(False)
@@ -166,7 +166,7 @@ class Ui_MainWindow(object):
         self.liquidityModify.setEnabled(False)
         self.Lbudget = QtWidgets.QTextEdit(self.frame)
         self.Lbudget.setGeometry(QtCore.QRect(5, 60, 21, 31))
-        self.Lbudget.setObjectName("Budget")
+        self.Lbudget.setObjectName("Bucket")
         self.LDD = QtWidgets.QTextEdit(self.frame)
         self.LDD.setGeometry(QtCore.QRect((((frameWidth - (5+21))/4)*(1-1))+31, 60, ((frameWidth - (5+21))/4)-10, 31))
         self.LDD.setObjectName("LDD")
@@ -228,7 +228,7 @@ class Ui_MainWindow(object):
         self.frame_2.setObjectName("frame_2")
         self.Cbudget = QtWidgets.QTextEdit(self.frame_2)
         self.Cbudget.setGeometry(QtCore.QRect(5, 60, 21, 31))
-        self.Cbudget.setObjectName("Budget")
+        self.Cbudget.setObjectName("Bucket")
         self.costAdd = QtWidgets.QPushButton(self.frame_2)
         self.costAdd.setGeometry(QtCore.QRect(30, 90, 80, 32))
         self.costAdd.setObjectName("costAdd")
@@ -317,7 +317,7 @@ class Ui_MainWindow(object):
         self.returnModify.setEnabled(False)
         self.Rbudget = QtWidgets.QTextEdit(self.frame_3)
         self.Rbudget.setGeometry(QtCore.QRect(5, 60, 21, 31))
-        self.Rbudget.setObjectName("Budget")
+        self.Rbudget.setObjectName("Bucket")
         self.RABCB = QtWidgets.QTextEdit(self.frame_3)
         self.RABCB.setGeometry(QtCore.QRect((((frameWidth - (5+21))/5)*(1-1))+31, 60, ((frameWidth - (5+21))/5)-10, 31))
         self.RABCB.setObjectName("RABCB")
@@ -405,7 +405,7 @@ class Ui_MainWindow(object):
         self.result_list.setObjectName("result_list")
         self.result_list.setColumnCount(7)
         self.result_list.setRowCount(0)
-        self.result_list.setHorizontalHeaderLabels(['Budget','Borrowings\nLB','Balance with\nCentral Bank\nABCB','Balance with\nother banks\nABOB','Invest. in\ngovernment and sec.\nAGS','Investment in\ndebentures and bonds\nADB','Advances\nAA'])
+        self.result_list.setHorizontalHeaderLabels(['Bucket','Borrowings\nLB','Balance with\nCentral Bank\nABCB','Balance with\nother banks\nABOB','Invest. in\ngovernment and sec.\nAGS','Investment in\ndebentures and bonds\nADB','Advances\nAA'])
         self.result_list.setSelectionBehavior(QAbstractItemView.SelectRows)
         # self.result_list.clicked.connect(self.rowClick)
         header = self.result_list.horizontalHeader()
@@ -671,7 +671,7 @@ class Ui_MainWindow(object):
         for i in range(0,len(tableList)):
             table = tableList[i]
             data = dataList[i]
-            data = data.sort_values(by=['budget'], ascending=True)
+            data = data.sort_values(by=['bucket'], ascending=True)
             #For Liquidity
             table.setRowCount(0)
             rawData = []
@@ -731,7 +731,7 @@ class Ui_MainWindow(object):
         try:
                 a = int(data[0])
         except:
-            self.showdialog("Budget must be in int")
+            self.showdialog("Bucket must be in int")
             return
         for i in range(0,len(data)):
             if(i==0):
@@ -759,7 +759,7 @@ class Ui_MainWindow(object):
         try:
                 a = int(data[0])
         except:
-            self.showdialog("Budget must be in int")
+            self.showdialog("Bucket must be in int")
             return
         for i in range(0,len(data)):
             if(i==0):
@@ -919,7 +919,7 @@ class Ui_MainWindow(object):
                         colData = int(colData)
                         # print(colData)
                     except:
-                        print("Replace budget error")
+                        print("Replace bucket error")
                     # print(colData)
                 composedData.append(colData)
                 col += 1
@@ -961,21 +961,21 @@ class Ui_MainWindow(object):
         if(senderTlb == self.liquidity_list):
             # print("Liquidity list")
             data = self.Liquidity.loc[budget]
-            self.Lbudget.setText(str(int(data['budget'])))
+            self.Lbudget.setText(str(int(data['bucket'])))
             self.LDD.setText(str(float(data['LDD'])))
             self.LSD.setText(str(float(data['LSD'])))
             self.LTD.setText(str(float(data['LTD'])))
             self.LB.setText(str(float(data['LB'])))
         elif(senderTlb == self.cost_list):
             data = self.Cost.loc[budget]
-            self.Cbudget.setText(str(int(data['budget'])))
+            self.Cbudget.setText(str(int(data['bucket'])))
             self.CLB.setText(str(float(data['CLB'])))
             self.CLDD.setText(str(float(data['CLDD'])))
             self.CLSD.setText(str(float(data['CLSD'])))
             self.CLTD.setText(str(float(data['CLTD'])))
         elif(senderTlb == self.return_list):
             data = self.Return.loc[budget]
-            self.Rbudget.setText(str(int(data['budget'])))
+            self.Rbudget.setText(str(int(data['bucket'])))
             self.RAA.setText(str(float(data['RAA'])))
             self.RABCB.setText(str(float(data['RABCB'])))
             self.RABOB.setText(str(float(data['RABOB'])))
