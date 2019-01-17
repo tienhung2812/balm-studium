@@ -201,14 +201,45 @@ def evalALM(data,individual):
             constraint_10 = False
 
     
-    cond = [constraint_1, constraint_2, constraint_3, constraint_4,
-            constraint_5, constraint_6, constraint_7, constraint_8,
-            constraint_9,constraint_10]
+    # cond = [constraint_1, constraint_2, constraint_3, constraint_4,
+    #         constraint_5, constraint_6, constraint_7, constraint_8,
+    #         constraint_9,constraint_10]
+    cond = [constraint_1, constraint_2, constraint_4,
+            constraint_5, constraint_6, constraint_7, constraint_8,constraint_10]
     count = 0
     for c in cond:
         if c:
             count = count+1
-    
+
+    conddata = []
+    for con in cond:
+        if con:
+            conddata.append(1)
+        else:
+            conddata.append(0)
+    file = open("cond.dat","r") 
+    readData = file.read() 
+    file.close()
+    # print(len(oldData))
+    newData = []
+    if(len(readData)==0):
+        newData = conddata
+    else:
+        oldData = []
+        for letter in readData.split(','):
+            letter = int(letter)
+            oldData.append(letter)
+        for i in range(0,len(conddata)):
+            newData.append(oldData[i]+conddata[i])
+    for i in range(0,len(newData)):
+        newData[i]= str(newData[i])
+    # print(newData)
+    file = open("cond.dat","w") 
+    stringtowrite= ','.join(newData)
+    print(stringtowrite)
+    file.write(stringtowrite)
+    file.close()
+
 
     return objective, count,
 

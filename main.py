@@ -549,7 +549,9 @@ class Ui_MainWindow(object):
         # self.GenerationField.setText("1")
         # self.PopulationField.setText("1")
         sys.stdout = Stream(newText=self.onUpdateText)
-
+        file = open("cond.dat","w") 
+        file.write("")
+        file.close()
     def __del__(self):
             sys.stdout = sys.__stdout__
     def addRow(self):
