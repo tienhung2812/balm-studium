@@ -210,7 +210,7 @@ def evalALM(data,individual):
     for c in cond:
         if c:
             count = count+1
-
+    '''
     conddata = []
     for con in cond:
         if con:
@@ -239,7 +239,7 @@ def evalALM(data,individual):
     print(stringtowrite)
     file.write(stringtowrite)
     file.close()
-
+    '''
 
     return objective, count,
 

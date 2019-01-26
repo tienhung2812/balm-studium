@@ -867,7 +867,7 @@ class Ui_MainWindow(object):
         self.counting=False
         data = self.eva.hof[-1]
         self.objectiveFuntion_label_2.setText(str(data.fitness.values[0]))
-        self.satisfiedConstraint_label2.setText(str(int(data.fitness.values[1]))+"/10")
+        self.satisfiedConstraint_label2.setText(str(int(data.fitness.values[1]))+"/8")
         table = self.result_list
 
         ABCB = [None]*8

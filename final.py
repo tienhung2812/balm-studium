@@ -54,7 +54,8 @@ class DEAP:
 
         self.toolbox.register("evaluate", evaluation.evalALM,data)
         self.toolbox.register("mate", tools.cxOnePoint)
-        
+        # upper bound, lower bound are based on the results of solvers
+        # otherwise, the contrainsts are really hard to satistifed
         l = [23, 0, 0, 0, 12, 0,
             23, 0, 0, 0, 12, 0,
             23, 0, 0, 0, 12, 0,
@@ -66,14 +67,14 @@ class DEAP:
             23, 0, 0, 0, 12, 0
         ]
         u = [
-            27,1, 44, 1, 160-10, 207,
-            27,1, 44, 1, 160-10, 207,
-            27,1, 44, 1, 160-10, 207,
-            27,1, 44, 1, 160-10, 207,
-            27,1, 44, 1, 160-10, 207,
-            27,1, 44, 1, 160-10, 207,
-            27,1, 44, 1, 160-10, 207,
-            27,1, 44, 1, 160-10, 207
+            27,1, 44, 1, 150, 207,
+            27,1, 44, 1, 150, 207,
+            27,1, 44, 1, 150, 207,
+            27,1, 44, 1, 150, 207,
+            27,1, 44, 1, 150, 207,
+            27,1, 44, 1, 150, 207,
+            27,1, 44, 1, 150, 207,
+            27,1, 44, 1, 150, 207
         ]
         from mutation import mutUniformFloat 
         self.toolbox.register("mutate", mutUniformFloat, low=l, up=u, indpb=0.5)
