@@ -18,3 +18,6 @@ To run the program, your systems need to have Python 3 and the following package
 * python3-pyqt5
 
 Those packages can be installed via the pip package manager.
+
+To run the program, you can run the following command:
+> python3 main.py
